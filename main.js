@@ -60,25 +60,51 @@ function loadModel({
 }
 
 loadModel({
-    path: '/models/stool.glb',
-    position: { x: 1.5, y: 0, z: 2 },
+    path: '/models/bookshelf.glb',
+    position: { x: 0, y: 0, z: 0 },
+    scale : { x: 2.5, y: 2, z: 4 }
 });
 
 loadModel({
-    path: '/models/stool.glb',
-    position: { x: 1.5, y: 0, z: 0 },
+    path: '/models/bookshelf.glb',
+    position: { x: 2.9, y: 0, z: 1 },
+    rotation: { x: 0, y: -0.7, z: 0 },
+    scale : { x: 2, y: 2, z: 2 }
+});
+
+loadModel({
+    path: '/models/bookshelf.glb',
+    position: { x: -2.9, y: 0, z: 1},
+    rotation: { x: 0, y: 0.7, z: 0 },
+    scale : { x: 2, y: 2, z: 2 }
+});
+
+
+loadModel({
+    path: '/models/Zarbi.glb',
+    position: { x: 0, y: 0.2, z: 0 },
+    rotation: { x: 0, y: 0.0, z: 0 },
+    scale: { x: 0.15, y: 0.15, z: 0.15 }
 });
 
 loadModel({
     path: '/models/Zarbi.glb',
-    position: { x: 0, y: 0.8, z: 0 },
-    rotation: { x: 0, y: 0.5, z: 0 },
-    scale: { x: 0.3, y: 0.3, z: 0.3 }
+    position: { x: 1, y: 0.2, z: 0 },
+    rotation: { x: 0, y: 0.0, z: 0 },
+    scale: { x: 0.15, y: 0.15, z: 0.15 }
+});
+
+loadModel({
+    path: '/models/Zarbi.glb',
+    position: { x: -1, y: 0.2, z: 0 },
+    rotation: { x: 0, y: 0.0, z: 0 },
+    scale: { x: 0.15, y: 0.15, z: 0.15 }
 });
 
 
 
-function mouseMove(event) {
+
+/* function mouseMove(event) {
     const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
     const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -89,6 +115,8 @@ function mouseMove(event) {
 }
 
 window.addEventListener("mousemove", mouseMove);
+*/
+
 
 // Render the scene
 renderer.render(scene, camera);
