@@ -3,6 +3,7 @@ console.log("hello world");
 import * as THREE from 'three';
 import resize from './resize.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const canvas = document.querySelector(".webgl");
@@ -42,6 +43,9 @@ const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
 scene.add(light);
 
 const loader = new GLTFLoader();
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('/draco/gltf/');
+loader.setDRACOLoader(dracoLoader);
 const models = [];
 
 function loadModel({
@@ -122,7 +126,6 @@ loadModel({
     rotation: { x: 0, y: -1.6, z: 0 },
     scale : { x: 0.35, y: 0.35, z: 0.35 }
 });
-
 
 
 /* function mouseMove(event) {
