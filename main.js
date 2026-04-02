@@ -3,6 +3,7 @@ console.log("hello world");
 import * as THREE from 'three';
 import resize from './resize.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const canvas = document.querySelector(".webgl");
 
@@ -16,12 +17,26 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 );
-// On recule un peu la caméra pour voir le cube (optionnel mais conseillé)
-camera.position.z = 5;
 
 // Create a renderer
 const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+const orbit = new OrbitControls(camera, renderer.domElement);
+
+//ajout des axis help
+const axesHelper = new THREE.AxesHelper(5); 
+scene.add(axesHelper); 
+
+//ajout grille pour help
+const gridHelper = new THREE.GridHelper(10, 10);
+scene.add(gridHelper);
+
+// On recule un peu la caméra pour voir le cube (optionnel mais conseillé)
+camera.position.z = 5;
+camera.position.y= 0.5;
+
+orbit.update();
 
 const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
 scene.add(light);
@@ -62,7 +77,7 @@ function loadModel({
 loadModel({
     path: '/models/bookshelf.glb',
     position: { x: 0, y: 0, z: 0 },
-    scale : { x: 2.5, y: 2, z: 4 }
+    scale : { x: 2.5, y: 2, z: 2 }
 });
 
 loadModel({
@@ -101,6 +116,12 @@ loadModel({
     scale: { x: 0.15, y: 0.15, z: 0.15 }
 });
 
+loadModel({
+    path: '/models/piston_cup.glb',
+    position: { x: 0, y: 0.65, z: 0.2 },
+    rotation: { x: 0, y: -1.6, z: 0 },
+    scale : { x: 0.35, y: 0.35, z: 0.35 }
+});
 
 
 
@@ -118,8 +139,7 @@ window.addEventListener("mousemove", mouseMove);
 */
 
 
-// Render the scene
-renderer.render(scene, camera);
+
 
 resize(camera, renderer);
 function animate() {
