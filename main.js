@@ -5,6 +5,7 @@ import resize from './resize.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { FirstPersonControls } from 'three/examples/jsm/Addons.js';
 
 const canvas = document.querySelector(".webgl");
 
@@ -160,6 +161,7 @@ window.addEventListener("mousemove", mouseMove);
 resize(camera, renderer);
 function animate() {
     requestAnimationFrame(animate);
+    orbit.update();
     renderer.render(scene, camera);
 }
 animate();
