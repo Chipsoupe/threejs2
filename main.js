@@ -33,6 +33,16 @@ scene.add(axesHelper);
 const gridHelper = new THREE.GridHelper(10, 10);
 scene.add(gridHelper);
 
+//Crée le sol
+const planeGeometry = new THREE.PlaneGeometry(10, 10);
+const planeMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x808080,
+    side : THREE.DoubleSide
+});
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+scene.add(plane); 
+plane.rotation.x = -Math.PI / 2;
+
 // On recule un peu la caméra pour voir le cube (optionnel mais conseillé)
 camera.position.z = 5;
 camera.position.y= 0.5;
@@ -78,54 +88,57 @@ function loadModel({
     );
 }
 
+//load les etageres
 loadModel({
-    path: '/models/bookshelf.glb',
-    position: { x: 0, y: 0, z: 0 },
-    scale : { x: 2.5, y: 2, z: 2 }
+    path: '/models/bookshelf3.glb',
+    position: { x: 0, y: 0.75, z: 0 },
+    scale : { x: 3, y: 2, z: 2 }
 });
 
 loadModel({
-    path: '/models/bookshelf.glb',
-    position: { x: 2.9, y: 0, z: 1 },
+    path: '/models/bookshelf2.glb',
+    position: { x: 2.4, y: 0.5, z: 0.8 },
     rotation: { x: 0, y: -0.7, z: 0 },
     scale : { x: 2, y: 2, z: 2 }
 });
 
 loadModel({
-    path: '/models/bookshelf.glb',
-    position: { x: -2.9, y: 0, z: 1},
+    path: '/models/bookshelf2.glb',
+    position: { x: -2.4, y: 0.5, z: 0.8},
     rotation: { x: 0, y: 0.7, z: 0 },
     scale : { x: 2, y: 2, z: 2 }
 });
 
-
-loadModel({
-    path: '/models/Zarbi.glb',
-    position: { x: 0, y: 0.2, z: 0 },
-    rotation: { x: 0, y: 0.0, z: 0 },
-    scale: { x: 0.15, y: 0.15, z: 0.15 }
-});
-
-loadModel({
-    path: '/models/Zarbi.glb',
-    position: { x: 1, y: 0.2, z: 0 },
-    rotation: { x: 0, y: 0.0, z: 0 },
-    scale: { x: 0.15, y: 0.15, z: 0.15 }
-});
-
-loadModel({
-    path: '/models/Zarbi.glb',
-    position: { x: -1, y: 0.2, z: 0 },
-    rotation: { x: 0, y: 0.0, z: 0 },
-    scale: { x: 0.15, y: 0.15, z: 0.15 }
-});
-
+//load les objets
 loadModel({
     path: '/models/piston_cup.glb',
-    position: { x: 0, y: 0.65, z: 0.2 },
+    position: { x: 0, y: 1.1, z: 0.0 },
     rotation: { x: 0, y: -1.6, z: 0 },
     scale : { x: 0.35, y: 0.35, z: 0.35 }
 });
+
+loadModel({
+    path: '/models/bycicle_redsdream.glb',
+    position: { x: 0, y: 0.59, z: 0 },
+    rotation: { x: 0, y: 1, z: 0 },
+    scale: { x: 0.45, y: 0.45, z: 0.45 }
+});
+
+loadModel({
+    path: '/models/bingbongcar_viceversa.glb',
+    position: { x: 0.85, y: 0.47, z: 0 },
+    rotation: { x: 0, y: -1.2, z: 0 },
+    scale: { x: 0.7, y: 0.7, z: 0.7 }
+});
+
+loadModel({
+    path: '/models/badge_soul.glb',
+    position: { x: -0.85, y: 0.47, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+
 
 
 /* function mouseMove(event) {
