@@ -139,6 +139,25 @@ loadModel({
     scale: { x: 0.2, y: 0.2, z: 0.2 }
 });
 
+// ajouter des interactions click // 
+const testModel = models[0]; // Remplacez par le modèle que vous souhaitez tester
+
+const raycaster = new THREE.Raycaster();
+const pointer  = new THREE.Vector2();
+
+canvas.addEventListener('click', (event) => {
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const intersects = raycaster.intersectObjects(models, true);
+    if (intersects.length > 0) {
+        const first = intersects[0];
+        console.log('Model clicked:', first.object);
+    }
+       ;
+
+});
+
 
 
 
