@@ -34,15 +34,51 @@ scene.add(axesHelper);
 const gridHelper = new THREE.GridHelper(10, 10);
 scene.add(gridHelper);
 
+// textures brcks
+const textureLoader = new THREE.TextureLoader();
+const colortexture = textureLoader.load('/textures/oak.jpg');
+const normaltexture = textureLoader.load('/textures/oak_normal.jpg');
+const roughtexture = textureLoader.load('/textures/oak_rough.jpg');
+const aotexture = textureLoader.load('/textures/oak_ao.jpg');
+
 //Crée le sol
 const planeGeometry = new THREE.PlaneGeometry(10, 10);
 const planeMaterial = new THREE.MeshStandardMaterial({ 
     color: 0x808080,
-    side : THREE.DoubleSide
+    side : THREE.DoubleSide,
+    map : colortexture,
+    normalMap : normaltexture,
+    roughnessMap : roughtexture,
+    aoMap : aotexture
 });
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 scene.add(plane); 
 plane.rotation.x = -Math.PI / 2;
+
+//crée les murs
+const wallGeometry = new THREE.PlaneGeometry(10, 3);
+const wallMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x808080,   
+    side : THREE.DoubleSide,
+});
+const wall1 = new THREE.Mesh(wallGeometry, wallMaterial);
+const wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
+const wall3 = new THREE.Mesh(wallGeometry, wallMaterial);
+scene.add(wall1, wall2, wall3);
+wall1.position.set(0, 1.5, -5);
+wall2.position.set(-5, 1.5, 0);
+wall2.rotation.y = Math.PI / 2;
+wall3.position.set(5, 1.5, 0);
+wall3.rotation.y = -Math.PI / 2;
+
+//crée le material pour les bookshelves
+const bookshelfMaterial = new THREE.MeshStandardMaterial({
+    map : colortexture,
+    normalMap : normaltexture,
+    roughnessMap : roughtexture,
+    aoMap : aotexture
+});
+
 
 // On recule un peu la caméra pour voir le cube (optionnel mais conseillé)
 camera.position.z = 5;
@@ -59,12 +95,16 @@ dracoLoader.setDecoderPath('/draco/gltf/');
 loader.setDRACOLoader(dracoLoader);
 const models = [];
 
+
+
+
 function loadModel({
     path,
     position = { x: 0, y: 0, z: 0 },
     rotation = { x: 0, y: 0, z: 0 },
     scale = { x: 1, y: 1, z: 1 },
-    onLoad = null
+    onLoad = null,
+    material = null
 }) {
     loader.load(
         path,
@@ -75,6 +115,15 @@ function loadModel({
             model.scale.set(scale.x, scale.y, scale.z);
             model.userData.baseRotationX = model.rotation.x;
             model.userData.baseRotationY = model.rotation.y;
+
+            if (material) {
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.material = material;
+                    }
+                });
+            }
+
             models.push(model);
             scene.add(model);
 
@@ -93,21 +142,24 @@ function loadModel({
 loadModel({
     path: '/models/bookshelf3.glb',
     position: { x: 0, y: 0.75, z: 0 },
-    scale : { x: 3, y: 2, z: 2 }
+    scale : { x: 3, y: 2, z: 2 },
+    material: bookshelfMaterial
 });
 
 loadModel({
     path: '/models/bookshelf2.glb',
     position: { x: 2.4, y: 0.5, z: 0.8 },
     rotation: { x: 0, y: -0.7, z: 0 },
-    scale : { x: 2, y: 2, z: 2 }
+    scale : { x: 2, y: 2, z: 2 },
+    material: bookshelfMaterial
 });
 
 loadModel({
     path: '/models/bookshelf2.glb',
     position: { x: -2.4, y: 0.5, z: 0.8},
     rotation: { x: 0, y: 0.7, z: 0 },
-    scale : { x: 2, y: 2, z: 2 }
+    scale : { x: 2, y: 2, z: 2 },
+    material: bookshelfMaterial
 });
 
 //load les objets
@@ -139,9 +191,10 @@ loadModel({
     scale: { x: 0.2, y: 0.2, z: 0.2 }
 });
 
-// ajouter des interactions click // 
+
 const testModel = models[0]; // Remplacez par le modèle que vous souhaitez tester
 
+// ajouter des interactions click // 
 const raycaster = new THREE.Raycaster();
 const pointer  = new THREE.Vector2();
 
