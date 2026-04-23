@@ -34,12 +34,18 @@ scene.add(axesHelper);
 const gridHelper = new THREE.GridHelper(10, 10);
 scene.add(gridHelper);
 
-// textures brcks
+// textures floor
 const textureLoader = new THREE.TextureLoader();
 const colortexture = textureLoader.load('/textures/oak.jpg');
 const normaltexture = textureLoader.load('/textures/oak_normal.jpg');
 const roughtexture = textureLoader.load('/textures/oak_rough.jpg');
 const aotexture = textureLoader.load('/textures/oak_ao.jpg');
+
+//textures walls
+const wallColorTexture = textureLoader.load('/textures/brick_color.jpg');
+const wallNormalTexture = textureLoader.load('/textures/brick_normal.jpg');
+const wallRoughnessTexture = textureLoader.load('/textures/brick_rough.jpg');
+
 
 //Crée le sol
 const planeGeometry = new THREE.PlaneGeometry(10, 10);
@@ -57,10 +63,14 @@ plane.rotation.x = -Math.PI / 2;
 
 //crée les murs
 const wallGeometry = new THREE.PlaneGeometry(10, 3);
-const wallMaterial = new THREE.MeshStandardMaterial({ 
-    color: 0x808080,   
+const wallMaterial = new THREE.MeshStandardMaterial({
     side : THREE.DoubleSide,
+    map : wallColorTexture,
+    normalMap : wallNormalTexture,
+    roughnessMap : wallRoughnessTexture,
 });
+wallMaterial.repeat(2, 2);
+
 const wall1 = new THREE.Mesh(wallGeometry, wallMaterial);
 const wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
 const wall3 = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -78,6 +88,8 @@ const bookshelfMaterial = new THREE.MeshStandardMaterial({
     roughnessMap : roughtexture,
     aoMap : aotexture
 });
+
+
 
 
 // On recule un peu la caméra pour voir le cube (optionnel mais conseillé)
