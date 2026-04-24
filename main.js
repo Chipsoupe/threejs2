@@ -49,7 +49,7 @@ const aotexture = textureLoader.load('/textures/oak_ao.jpg');
 const wallColorTexture = textureLoader.load('/textures/red_brick_diff.jpg');
 const wallNormalTexture = textureLoader.load('/textures/red_brick_nor.jpg');
 const wallRoughnessTexture = textureLoader.load('/textures/red_brick_rough.jpg');
-const wallAoTexture = textureLoader.load('/textures/red_brick_disp.jpg');
+const wallAoTexture = textureLoader.load('/textures/red_brick_disp.png');
 
 [wallColorTexture, wallNormalTexture, wallRoughnessTexture, wallAoTexture].forEach((texture) => {
     texture.wrapS = THREE.RepeatWrapping;
@@ -91,6 +91,12 @@ wall2.rotation.y = Math.PI / 2;
 wall3.position.set(5, 1.5, 0);
 wall3.rotation.y = -Math.PI / 2;
 
+//setup les ombres pour que les murs et sol puissent recevoir des ombres
+plane.receiveShadow = true;
+wall1.receiveShadow = true;
+wall2.receiveShadow = true;
+wall3.receiveShadow = true;
+
 //crée le material pour les bookshelves
 const bookshelfMaterial = new THREE.MeshStandardMaterial({
     map : colortexture,
@@ -108,8 +114,24 @@ camera.position.y= 0.5;
 
 orbit.update();
 
-const lightAmbiente = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
-scene.add(lightAmbiente);
+//setup toutes les lumières
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
+scene.add(ambientLight);
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x2b2b2b, 0.4);
+scene.add(hemiLight);
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+keyLight.position.set(4, 6, 3);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(2048, 2048);
+keyLight.shadow.camera.near = 0.5;
+keyLight.shadow.camera.far = 30;
+keyLight.shadow.camera.left = -8;
+keyLight.shadow.camera.right = 8;
+keyLight.shadow.camera.top = 8;
+keyLight.shadow.camera.bottom = -8;
+scene.add(keyLight);
+
+
 
 const loader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
@@ -141,6 +163,8 @@ function loadModel({
             if (material) {
                 model.traverse((child) => {
                     if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
                         child.material = material;
                     }
                 });
