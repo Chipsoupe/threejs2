@@ -2,12 +2,21 @@ console.log("hello world");
 
 import * as THREE from 'three';
 import resize from './resize.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { FirstPersonControls } from 'three/examples/jsm/Addons.js';
+
 
 const canvas = document.querySelector(".webgl");
+
+/
+const ecranChargement = document.querySelector('#ui-chargement');
+const ecranAccueil = document.querySelector('#ui-accueil');
+const ecranDifficulte = document.querySelector('#ui-difficulte');
+const btnCommencer = document.querySelector('#btn-commencer');
+const boutonsDifficulte = document.querySelectorAll('.btn-diff');
+
+let gameStats = { vies: 0 }; // Variable pour la suite du jeu
 
 // Create a scene
 const scene = new THREE.Scene();
@@ -46,7 +55,6 @@ const wallColorTexture = textureLoader.load('/textures/brick_color.jpg');
 const wallNormalTexture = textureLoader.load('/textures/brick_normal.jpg');
 const wallRoughnessTexture = textureLoader.load('/textures/brick_rough.jpg');
 
-
 //Crée le sol
 const planeGeometry = new THREE.PlaneGeometry(10, 10);
 const planeMaterial = new THREE.MeshStandardMaterial({ 
@@ -61,7 +69,7 @@ const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 scene.add(plane); 
 plane.rotation.x = -Math.PI / 2;
 
-//crée les murs
+
 const wallGeometry = new THREE.PlaneGeometry(10, 3);
 const wallMaterial = new THREE.MeshStandardMaterial({
     side : THREE.DoubleSide,
@@ -81,7 +89,7 @@ wall2.rotation.y = Math.PI / 2;
 wall3.position.set(5, 1.5, 0);
 wall3.rotation.y = -Math.PI / 2;
 
-//crée le material pour les bookshelves
+
 const bookshelfMaterial = new THREE.MeshStandardMaterial({
     map : colortexture,
     normalMap : normaltexture,
@@ -90,9 +98,6 @@ const bookshelfMaterial = new THREE.MeshStandardMaterial({
 });
 
 
-
-
-// On recule un peu la caméra pour voir le cube (optionnel mais conseillé)
 camera.position.z = 5;
 camera.position.y= 0.5;
 
@@ -101,14 +106,32 @@ orbit.update();
 const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
 scene.add(light);
 
+
+THREE.DefaultLoadingManager.onLoad = function ( ) {
+    console.log( 'Tous les modèles 3D et textures sont chargés !' );
+    // On cache l'écran bleu et on affiche la page d'accueil
+    ecranChargement.style.display = 'none';
+    ecranAccueil.style.display = 'flex';
+};
+
 const loader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/gltf/');
+
+
+const ecranChargement = document.querySelector('#ui-chargement');
+const ecranAccueil = document.querySelector('#ui-accueil');
+
+
+THREE.DefaultLoadingManager.onLoad = function () {
+    console.log('Tous les modèles sont chargés !');
+   
+    ecranChargement.style.display = 'none';
+    ecranAccueil.style.display = 'flex';
+};
+
 loader.setDRACOLoader(dracoLoader);
 const models = [];
-
-
-
 
 function loadModel({
     path,
@@ -151,62 +174,19 @@ function loadModel({
 }
 
 //load les etageres
-loadModel({
-    path: '/models/bookshelf3.glb',
-    position: { x: 0, y: 0.75, z: 0 },
-    scale : { x: 3, y: 2, z: 2 },
-    material: bookshelfMaterial
-});
-
-loadModel({
-    path: '/models/bookshelf2.glb',
-    position: { x: 2.4, y: 0.5, z: 0.8 },
-    rotation: { x: 0, y: -0.7, z: 0 },
-    scale : { x: 2, y: 2, z: 2 },
-    material: bookshelfMaterial
-});
-
-loadModel({
-    path: '/models/bookshelf2.glb',
-    position: { x: -2.4, y: 0.5, z: 0.8},
-    rotation: { x: 0, y: 0.7, z: 0 },
-    scale : { x: 2, y: 2, z: 2 },
-    material: bookshelfMaterial
-});
+loadModel({ path: '/models/bookshelf3.glb', position: { x: 0, y: 0.75, z: 0 }, scale : { x: 3, y: 2, z: 2 }, material: bookshelfMaterial });
+loadModel({ path: '/models/bookshelf2.glb', position: { x: 2.4, y: 0.5, z: 0.8 }, rotation: { x: 0, y: -0.7, z: 0 }, scale : { x: 2, y: 2, z: 2 }, material: bookshelfMaterial });
+loadModel({ path: '/models/bookshelf2.glb', position: { x: -2.4, y: 0.5, z: 0.8}, rotation: { x: 0, y: 0.7, z: 0 }, scale : { x: 2, y: 2, z: 2 }, material: bookshelfMaterial });
 
 //load les objets
-loadModel({
-    path: '/models/piston_cup.glb',
-    position: { x: 0, y: 1.1, z: 0.0 },
-    rotation: { x: 0, y: -1.6, z: 0 },
-    scale : { x: 0.35, y: 0.35, z: 0.35 }
-});
+loadModel({ path: '/models/piston_cup.glb', position: { x: 0, y: 1.1, z: 0.0 }, rotation: { x: 0, y: -1.6, z: 0 }, scale : { x: 0.35, y: 0.35, z: 0.35 } });
+loadModel({ path: '/models/bycicle_redsdream.glb', position: { x: 0, y: 0.59, z: 0 }, rotation: { x: 0, y: 1, z: 0 }, scale: { x: 0.45, y: 0.45, z: 0.45 } });
+loadModel({ path: '/models/bingbongcar_viceversa.glb', position: { x: 0.85, y: 0.47, z: 0 }, rotation: { x: 0, y: -1.2, z: 0 }, scale: { x: 0.7, y: 0.7, z: 0.7 } });
+loadModel({ path: '/models/badge_soul.glb', position: { x: -0.85, y: 0.47, z: 0 }, rotation: { x: 1.8, y: 1, z: 0 }, scale: { x: 0.2, y: 0.2, z: 0.2 } });
 
-loadModel({
-    path: '/models/bycicle_redsdream.glb',
-    position: { x: 0, y: 0.59, z: 0 },
-    rotation: { x: 0, y: 1, z: 0 },
-    scale: { x: 0.45, y: 0.45, z: 0.45 }
-});
-
-loadModel({
-    path: '/models/bingbongcar_viceversa.glb',
-    position: { x: 0.85, y: 0.47, z: 0 },
-    rotation: { x: 0, y: -1.2, z: 0 },
-    scale: { x: 0.7, y: 0.7, z: 0.7 }
-});
-
-loadModel({
-    path: '/models/badge_soul.glb',
-    position: { x: -0.85, y: 0.47, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
-});
+const testModel = models[0]; 
 
 
-const testModel = models[0]; // Remplacez par le modèle que vous souhaitez tester
-
-// ajouter des interactions click // 
 const raycaster = new THREE.Raycaster();
 const pointer  = new THREE.Vector2();
 
@@ -219,30 +199,27 @@ canvas.addEventListener('click', (event) => {
         const first = intersects[0];
         console.log('Model clicked:', first.object);
     }
-       ;
-
 });
 
 
+/
+btnCommencer.addEventListener('click', () => {
+    ecranAccueil.style.display = 'none';
+    ecranDifficulte.style.display = 'flex';
+});
 
-
-/* function mouseMove(event) {
-    const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-    const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    models.forEach((model) => {
-        model.rotation.x = model.userData.baseRotationX + mouseY * Math.PI * 0.1;
-        model.rotation.y = model.userData.baseRotationY + mouseX * Math.PI * 0.2;
+boutonsDifficulte.forEach((bouton) => {
+    bouton.addEventListener('click', () => {
+        const vies = parseInt(bouton.getAttribute('data-vies'));
+        gameStats.vies = vies;
+        ecranDifficulte.style.display = 'none';
+        console.log("LE JEU COMMENCE AVEC " + vies + " VIES !");
     });
-}
-
-window.addEventListener("mousemove", mouseMove);
-*/
-
-
+});
 
 
 resize(camera, renderer);
+
 function animate() {
     requestAnimationFrame(animate);
     orbit.update();
