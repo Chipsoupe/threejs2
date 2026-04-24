@@ -253,10 +253,28 @@ canvas.addEventListener('click', (event) => {
         const first = intersects[0];
         console.log('Model clicked:', first.object);
     }
-       ;
+    ;
 
 });
 
+
+//mise en place des stickers sur les murs
+const textureLoader = new THREE.TextureLoader();
+const imageNemoTexture = textureLoader.load('/textures/sticker_nemo.png');
+
+const imageMaterial = new THREE.MeshBasicMaterial({
+  map: imageNemoTexture,
+  transparent: true
+});
+
+const imageGeometry = new THREE.PlaneGeometry(2, 1.5);
+const image = new THREE.Mesh(imageGeometry, imageMaterial);
+
+scene.add(image);
+
+
+// Mur du fond : wall1 est à z = -5
+image.position.set(0, 1.5, -4.99);
 
 
 
