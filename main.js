@@ -24,6 +24,10 @@ const camera = new THREE.PerspectiveCamera(
 const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+//je enable les shadows pour le renderer
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 const orbit = new OrbitControls(camera, renderer.domElement);
 
 //ajout des axis help
@@ -42,9 +46,16 @@ const roughtexture = textureLoader.load('/textures/oak_rough.jpg');
 const aotexture = textureLoader.load('/textures/oak_ao.jpg');
 
 //textures walls
-const wallColorTexture = textureLoader.load('/textures/brick_color.jpg');
-const wallNormalTexture = textureLoader.load('/textures/brick_normal.jpg');
-const wallRoughnessTexture = textureLoader.load('/textures/brick_rough.jpg');
+const wallColorTexture = textureLoader.load('/textures/red_brick_diff.jpg');
+const wallNormalTexture = textureLoader.load('/textures/red_brick_nor.jpg');
+const wallRoughnessTexture = textureLoader.load('/textures/red_brick_rough.jpg');
+const wallAoTexture = textureLoader.load('/textures/red_brick_disp.jpg');
+
+[wallColorTexture, wallNormalTexture, wallRoughnessTexture, wallAoTexture].forEach((texture) => {
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(2, 2);
+});
 
 
 //Crée le sol
@@ -69,7 +80,6 @@ const wallMaterial = new THREE.MeshStandardMaterial({
     normalMap : wallNormalTexture,
     roughnessMap : wallRoughnessTexture,
 });
-wallMaterial.repeat(2, 2);
 
 const wall1 = new THREE.Mesh(wallGeometry, wallMaterial);
 const wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -92,14 +102,14 @@ const bookshelfMaterial = new THREE.MeshStandardMaterial({
 
 
 
-// On recule un peu la caméra pour voir le cube (optionnel mais conseillé)
+// On recule un peu la caméra pour voir le cube
 camera.position.z = 5;
 camera.position.y= 0.5;
 
 orbit.update();
 
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
-scene.add(light);
+const lightAmbiente = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
+scene.add(lightAmbiente);
 
 const loader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
