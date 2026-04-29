@@ -4,8 +4,6 @@ import * as THREE from 'three';
 import resize from './resize.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { FirstPersonControls } from 'three/examples/jsm/Addons.js';
 
 const canvas = document.querySelector(".webgl");
 
@@ -28,8 +26,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-const orbit = new OrbitControls(camera, renderer.domElement);
-
 //ajout des axis help
 const axesHelper = new THREE.AxesHelper(5); 
 scene.add(axesHelper); 
@@ -51,11 +47,28 @@ const wallNormalTexture = textureLoader.load('/textures/red_brick_nor.jpg');
 const wallRoughnessTexture = textureLoader.load('/textures/red_brick_rough.jpg');
 const wallAoTexture = textureLoader.load('/textures/red_brick_disp.png');
 
-[wallColorTexture, wallNormalTexture, wallRoughnessTexture, wallAoTexture].forEach((texture) => {
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(2, 2);
-});
+const wallTextureRepeatFactor = 0.8;
+
+function createWallMaterial(width, height) {
+    const colorTexture = wallColorTexture.clone();
+    const normalTexture = wallNormalTexture.clone();
+    const roughnessTexture = wallRoughnessTexture.clone();
+    const aoTexture = wallAoTexture.clone();
+
+    [colorTexture, normalTexture, roughnessTexture, aoTexture].forEach((texture) => {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(width * wallTextureRepeatFactor, height * wallTextureRepeatFactor);
+    });
+
+    return new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: colorTexture,
+        normalMap: normalTexture,
+        roughnessMap: roughnessTexture,
+        aoMap: aoTexture
+    });
+}
 
 
 //Crée le sol
@@ -68,34 +81,83 @@ const planeMaterial = new THREE.MeshStandardMaterial({
     roughnessMap : roughtexture,
     aoMap : aotexture
 });
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-scene.add(plane); 
-plane.rotation.x = -Math.PI / 2;
+const sol = new THREE.Mesh(planeGeometry, planeMaterial);
+const plafond = new THREE.Mesh(planeGeometry, planeMaterial);
+scene.add(sol, plafond); 
+sol.rotation.x = -Math.PI / 2;
+plafond.position.y = 3;
+plafond.rotation.x = Math.PI / 2;
+
+//crée le plafond séparé
+/*const ceilingGeometry = new THREE.PlaneGeometry(10, 10);
+const ceilingMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x000000,
+    side : THREE.DoubleSide,
+    map : colortexture,
+    normalMap : normaltexture,
+    roughnessMap : roughtexture,
+    aoMap : aotexture
+});
+const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+scene.add(ceiling); 
+ceiling.position.y = 3;
+ceiling.rotation.x = Math.PI / 2; */
 
 //crée les murs
 const wallGeometry = new THREE.PlaneGeometry(10, 3);
-const wallMaterial = new THREE.MeshStandardMaterial({
-    side : THREE.DoubleSide,
-    map : wallColorTexture,
-    normalMap : wallNormalTexture,
-    roughnessMap : wallRoughnessTexture,
-});
+const wall1Material = createWallMaterial(10, 3);
+const wall2Material = createWallMaterial(10, 3);
+const wall3Material = createWallMaterial(10, 3);
 
-const wall1 = new THREE.Mesh(wallGeometry, wallMaterial);
-const wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
-const wall3 = new THREE.Mesh(wallGeometry, wallMaterial);
-scene.add(wall1, wall2, wall3);
+// Ouverture de porte sur le mur derrière le spawn, côté droit
+const wallWidth = 10;
+const wallHeight = 3;
+const doorWidth = 1.6;
+const doorHeight = 2.2;
+const doorCenterX = 2.6;
+const wallLeftEdge = -wallWidth / 2;
+const wallRightEdge = wallWidth / 2;
+const doorLeftX = doorCenterX - doorWidth / 2;
+const doorRightX = doorCenterX + doorWidth / 2;
+const leftSegmentWidth = doorLeftX - wallLeftEdge;
+const rightSegmentWidth = wallRightEdge - doorRightX;
+const topSegmentHeight = wallHeight - doorHeight;
+
+const wall4LeftMaterial = createWallMaterial(leftSegmentWidth, wallHeight);
+const wall4RightMaterial = createWallMaterial(rightSegmentWidth, wallHeight);
+const wall4TopMaterial = createWallMaterial(doorWidth, topSegmentHeight);
+
+const wall1 = new THREE.Mesh(wallGeometry, wall1Material);
+const wall2 = new THREE.Mesh(wallGeometry, wall2Material);
+const wall3 = new THREE.Mesh(wallGeometry, wall3Material);
+const wall4Left = new THREE.Mesh(new THREE.PlaneGeometry(leftSegmentWidth, wallHeight), wall4LeftMaterial);
+const wall4Right = new THREE.Mesh(new THREE.PlaneGeometry(rightSegmentWidth, wallHeight), wall4RightMaterial);
+const wall4Top = new THREE.Mesh(new THREE.PlaneGeometry(doorWidth, topSegmentHeight), wall4TopMaterial);
+
+scene.add(wall1, wall2, wall3, wall4Left, wall4Right, wall4Top);
 wall1.position.set(0, 1.5, -5);
 wall2.position.set(-5, 1.5, 0);
 wall2.rotation.y = Math.PI / 2;
 wall3.position.set(5, 1.5, 0);
 wall3.rotation.y = -Math.PI / 2;
 
+wall4Left.position.set((wallLeftEdge + doorLeftX) / 2, wallHeight / 2, 5);
+wall4Right.position.set((doorRightX + wallRightEdge) / 2, wallHeight / 2, 5);
+wall4Top.position.set(doorCenterX, doorHeight + topSegmentHeight / 2, 5);
+
+wall4Left.rotation.y = Math.PI;
+wall4Right.rotation.y = Math.PI;
+wall4Top.rotation.y = Math.PI;
+
 //setup les ombres pour que les murs et sol puissent recevoir des ombres
-plane.receiveShadow = true;
+sol.receiveShadow = true;
+plafond.receiveShadow = true;
 wall1.receiveShadow = true;
 wall2.receiveShadow = true;
 wall3.receiveShadow = true;
+wall4Left.receiveShadow = true;
+wall4Right.receiveShadow = true;
+wall4Top.receiveShadow = true;
 
 //crée le material pour les bookshelves
 const bookshelfMaterial = new THREE.MeshStandardMaterial({
@@ -108,11 +170,36 @@ const bookshelfMaterial = new THREE.MeshStandardMaterial({
 
 
 
-// On recule un peu la caméra pour voir le cube
-camera.position.z = 5;
-camera.position.y= 0.5;
+// Caméra de pov
+camera.position.set(0, 1.65, 3.5);
 
-orbit.update();
+const keys = {
+    ArrowUp: false,
+    ArrowDown: false,
+    ArrowLeft: false,
+    ArrowRight: false
+};
+
+window.addEventListener('keydown', (event) => {
+    if (event.key in keys) {
+        keys[event.key] = true;
+    }
+});
+
+window.addEventListener('keyup', (event) => {
+    if (event.key in keys) {
+        keys[event.key] = false;
+    }
+});
+
+let cameraYaw = 0;
+camera.rotation.set(0, cameraYaw, 0);
+
+const clock = new THREE.Clock();
+const movementSpeed = 3;
+const rotationSpeed = 2;
+const viewDirection = new THREE.Vector3();
+const movementDirection = new THREE.Vector3();
 
 //setup toutes les lumières
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
@@ -131,6 +218,27 @@ keyLight.shadow.camera.top = 8;
 keyLight.shadow.camera.bottom = -8;
 scene.add(keyLight);
 
+
+//Les pointlight dans la chambre
+function createRoomLight({ x, y, z, color = 0xfff1d6, intensity = 1.2, distance = 4, decay = 2 }) {
+    const light = new THREE.PointLight(color, intensity, distance, decay);
+    light.position.set(x, y, z);
+    scene.add(light);
+
+    const bulb = new THREE.Mesh(
+        new THREE.SphereGeometry(0.06, 12, 12),
+        new THREE.MeshBasicMaterial({ color })
+    );
+    bulb.position.set(x, y, z);
+    scene.add(bulb);
+
+    return light;
+}
+
+createRoomLight({ x: -4.5, y: 2.9, z: -4.5, color: 0xfff3c4, intensity: 1.1, distance: 5 });
+createRoomLight({ x: 4.5, y: 2.9, z: -4.5, color: 0xfff3c4, intensity: 1.1, distance: 5 });
+createRoomLight({ x: -4.5, y: 2.9, z: 4.5, color: 0xfff3c4, intensity: 1.1, distance: 5 });
+createRoomLight({ x: 4.5, y: 2.9, z: 4.5, color: 0xfff3c4, intensity: 1.1, distance: 5 });
 
 
 const loader = new GLTFLoader();
@@ -184,29 +292,135 @@ function loadModel({
     );
 }
 
-//load les etageres
+//load les meubles
 loadModel({
-    path: '/models/bookshelf3.glb',
-    position: { x: 0, y: 0.75, z: 0 },
-    scale : { x: 3, y: 2, z: 2 },
-    material: bookshelfMaterial
+    path: '/models/meubles/pixar bed .glb',
+    position: { x: -3.7, y: 0.7, z: -3.2 },
+    rotation: { x: 0, y: 1.57, z: 0 },
+    scale : { x: 3, y: 3, z: 4 },
+
 });
 
 loadModel({
-    path: '/models/bookshelf2.glb',
+    path: '/models/meubles/bookshelf2.glb',
     position: { x: 2.4, y: 0.5, z: 0.8 },
-    rotation: { x: 0, y: -0.7, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
     scale : { x: 2, y: 2, z: 2 },
     material: bookshelfMaterial
 });
 
 loadModel({
-    path: '/models/bookshelf2.glb',
-    position: { x: -2.4, y: 0.5, z: 0.8},
-    rotation: { x: 0, y: 0.7, z: 0 },
-    scale : { x: 2, y: 2, z: 2 },
+    path: '/models/meubles/bookshelf3.glb',
+    position: { x: -2, y: 0.5, z: -4.5},
+    rotation: { x: 0, y: 0, z: 0 },
+    scale : { x: 2.5, y: 2.5, z: 2.5 },
     material: bookshelfMaterial
 });
+
+loadModel({
+    path: '/models/meubles/doorframe.glb',
+    position: { x: 2.6 , y: 1.1, z: 5.1
+    },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale : { x: 1.7, y: 1.05, z: 1.5 },
+    material: bookshelfMaterial
+});
+
+loadModel({
+    path: '/models/meubles/table.glb',
+    position: { x: -4.4, y: 0.5, z: 2},
+    rotation: { x: 0, y: 1.57, z: 0 },
+    scale : { x: 1.2, y: 1, z: 1 },
+    material: bookshelfMaterial
+});
+
+loadModel({
+    path: '/models/meubles/monitor.glb',
+    position: { x: -4.4, y: 1.38, z: 2},
+    rotation: { x: 0, y: 1.57, z: 0 },
+    scale : { x: 1.8, y: 1.8, z: 1.8 },
+});
+
+loadModel({
+    path: '/models/meubles/drawer.glb',
+    position: { x: -4.4, y: 0.95, z: 0},
+    rotation: { x: 0, y: 1.57, z: 0 },
+    scale : { x: 2.8, y: 2, z: 2.8 },
+    material: bookshelfMaterial
+});
+
+loadModel({
+    path: '/models/meubles/drawer2.glb',
+    position: { x: -4.4, y: 0.42, z: 0},
+    rotation: { x: 0, y: 1.57, z: 0 },
+    scale : { x: 2.8, y: 2, z: 2.8 },
+    material: bookshelfMaterial
+});
+
+loadModel({
+    path: '/models/meubles/bookshelf2.glb',
+    position: { x: -4.8, y: 1.2, z: 4},
+    rotation: { x: 0, y: 1.57, z: 0 },
+    scale : { x: 1.7, y: 2.8, z:2 },
+    material: bookshelfMaterial
+});
+
+loadModel({
+    path: '/models/meubles/bookshelf2.glb',
+    position: { x: 4.8, y: 1.2, z: 4},
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale : { x: 1.7, y: 2.8, z:2 },
+    material: bookshelfMaterial
+});
+
+loadModel({
+    path: '/models/meubles/wardrobe.glb',
+    position: { x: 4.75, y: 1.4, z: 0.5 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 2.8 , y: 1.8, z: 1 }
+});
+loadModel({
+    path: '/models/meubles/table-basse.glb',
+    position: { x: 3.5, y: 0.5, z: -3.3 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 0.7, y: 0.7, z: 0.7 }
+});
+
+loadModel({
+    path: '/models/meubles/tabouret.glb',
+    position: { x: 4, y: 0.2, z: -4.5 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 0.6, y: 0.6, z: 0.6 }
+});
+
+loadModel({
+    path: '/models/meubles/tabouret.glb',
+    position: { x: 4.5, y: 0.2, z: -3 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 0.6, y: 0.6, z: 0.6 }
+});
+
+loadModel({
+    path: '/models/meubles/tabouret.glb',
+    position: { x: 3, y: 0.2, z: -2.8 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 0.6, y: 0.6, z: 0.6 }
+});
+
+loadModel({
+    path: '/models/meubles/chaise.glb',
+    position: { x: -3.5, y: 0.7, z: 2 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 1.4, y: 1.4, z: 1.4 }
+});
+
+loadModel({
+    path: '/models/meubles/wooden letter blocks.glb',
+    position: { x: 0, y: 1, z: 0 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 0.6, y: 0.6, z: 0.6 }
+});
+
 
 //load les objets
 loadModel({
@@ -237,8 +451,109 @@ loadModel({
     scale: { x: 0.2, y: 0.2, z: 0.2 }
 });
 
+loadModel({
+    path: '/models/meubles/pixar round poster 3d model.glb',
+    position: { x: 0, y: 0, z: 0 },
+    rotation: { x: 0, y: -1.57, z: 0 },
+    scale: { x: 0.6, y: 0.6, z: 0.6 }
+});
 
-const testModel = models[0]; // Remplacez par le modèle que vous souhaitez tester
+
+
+//Load tous les modeles
+loadModel({
+    path: '/models/cailloux_1001pattes.glb',
+    position: { x: -0.85, y: 1, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/casques_lifted.glb',
+    position: { x: -0.85, y: 1.5, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/casquette_monster_and_co.glb',
+    position: { x: -0.85, y: 2, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/chapeau_elio.glb',
+    position: { x: -0.85, y: 2.5, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/chapeau-of-wallyB_the-adventure-of-andre-and-wallyB.glb',
+    position: { x: -0.85, y: 3, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/collier_chien_lahaut.glb',
+    position: { x: -0.85, y: 3.5, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/eponge_elementaire.glb',
+    position: { x: -0.85, y: 4, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/eve.glb.glb',
+    position: { x: -0.85, y: 4.5, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/gateaux_rebelle.glb',
+    position: { x: -0.85, y: 0.47, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/gemephoenix_enavant.glb',
+    position: { x: -0.85, y: 0.47, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/guitare_coco.glb',
+    position: { x: -0.85, y: 0.47, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/lotso_toystory.glb',
+    position: { x: -0.85, y: 0.47, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+loadModel({
+    path: '/models/vezpa_luca.glb',
+    position: { x: -0.85, y: 0.47, z: 0 },
+    rotation: { x: 1.8, y: 1, z: 0 },
+    scale: { x: 0.2, y: 0.2, z: 0.2 }
+});
+
+
+const testModel = models[0]; // Remplacer par le modèle quon veut
 
 // ajouter des interactions click // 
 const raycaster = new THREE.Raycaster();
@@ -259,7 +574,6 @@ canvas.addEventListener('click', (event) => {
 
 
 //mise en place des stickers sur les murs
-const textureLoader = new THREE.TextureLoader();
 const imageNemoTexture = textureLoader.load('/textures/sticker_nemo.png');
 
 const imageMaterial = new THREE.MeshBasicMaterial({
@@ -273,7 +587,7 @@ const image = new THREE.Mesh(imageGeometry, imageMaterial);
 scene.add(image);
 
 
-// Mur du fond : wall1 est à z = -5
+// Mur du fond (le wall1 est à Z-5)
 image.position.set(0, 1.5, -4.99);
 
 
@@ -297,7 +611,40 @@ window.addEventListener("mousemove", mouseMove);
 resize(camera, renderer);
 function animate() {
     requestAnimationFrame(animate);
-    orbit.update();
+
+    const delta = clock.getDelta();
+
+    if (keys.ArrowLeft) {
+        cameraYaw += rotationSpeed * delta;
+    }
+
+    if (keys.ArrowRight) {
+        cameraYaw -= rotationSpeed * delta;
+    }
+
+    camera.rotation.set(0, cameraYaw, 0);
+
+    camera.getWorldDirection(viewDirection);
+    viewDirection.y = 0;
+    viewDirection.normalize();
+
+    movementDirection.set(0, 0, 0);
+
+    if (keys.ArrowUp) {
+        movementDirection.add(viewDirection);
+    }
+
+    if (keys.ArrowDown) {
+        movementDirection.sub(viewDirection);
+    }
+
+    if (movementDirection.lengthSq() > 0) {
+        movementDirection.normalize();
+        camera.position.addScaledVector(movementDirection, movementSpeed * delta);
+    }
+
+    camera.position.y = 1.65;
+
     renderer.render(scene, camera);
 }
 animate();
