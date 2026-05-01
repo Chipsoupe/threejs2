@@ -416,9 +416,9 @@ loadModel({
 
 loadModel({
     path: '/models/meubles/wooden letter blocks.glb',
-    position: { x: 0, y: 1, z: 0 },
+    position: { x: -3.5, y: 2, z: -4.5 },
     rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 0.6, y: 0.6, z: 0.6 }
+    scale: { x: 1, y: 1, z: 1 }
 });
 
 
@@ -451,13 +451,21 @@ loadModel({
     scale: { x: 0.2, y: 0.2, z: 0.2 }
 });
 
+/*
 loadModel({
     path: '/models/meubles/pixar round poster 3d model.glb',
-    position: { x: 0, y: 0, z: 0 },
-    rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 0.6, y: 0.6, z: 0.6 }
+    position: { x: 0, y: 1.5, z: -4.85 },
+    rotation: { x: 0.45, y: -1.57, z: 0 },
+    scale: { x: 1.8, y: 1.8, z: 1.8 }
 });
+*/
 
+loadModel({
+    path: '/models/meubles/pixar round poster 3d model.glb',
+    position: { x: 0, y: 0.2, z: -1 },
+    rotation: { x: -1.5, y: -1.57, z: 0 },
+    scale: { x: 0.1, y: 4, z: 4 }
+});
 
 
 //Load tous les modeles
@@ -575,21 +583,36 @@ canvas.addEventListener('click', (event) => {
 
 //mise en place des stickers sur les murs
 const imageNemoTexture = textureLoader.load('/textures/sticker_nemo.png');
+const imageCarsTexture = textureLoader.load('/textures/sticker_cars.png');
+const imageRatatouilleTexture = textureLoader.load('/textures/sticker_ratatouille.png');
+const imageToyStoryTexture = textureLoader.load('/textures/sticker_toy_story.png');
+const imageLaHautTexture = textureLoader.load('/textures/sticker_lahaut.png');
 
-const imageMaterial = new THREE.MeshBasicMaterial({
-  map: imageNemoTexture,
-  transparent: true
-});
+function createWallSticker(texture, position, rotationY = 0) {
+        const stickerMaterial = new THREE.MeshBasicMaterial({
+                map: texture,
+                transparent: true,
+                side: THREE.DoubleSide
+        });
+        const stickerGeometry = new THREE.PlaneGeometry(1.6, 1.2);
+        const sticker = new THREE.Mesh(stickerGeometry, stickerMaterial);
+        sticker.position.set(position.x, position.y, position.z);
+        sticker.rotation.y = rotationY;
+        scene.add(sticker);
+}
 
-const imageGeometry = new THREE.PlaneGeometry(2, 1.5);
-const image = new THREE.Mesh(imageGeometry, imageMaterial);
+// Mur du fond (wall1 a Z = -5)
+createWallSticker(imageNemoTexture, { x: 2.9, y: 1.7, z: -4.98 }, 0);
+createWallSticker(imageCarsTexture, { x: -2.4, y: 1.4, z: -4.98 }, 0);
 
-scene.add(image);
+// Mur gauche (wall2 a X = -5, rotation Y = PI/2)
+createWallSticker(imageRatatouilleTexture, { x: -4.98, y: 1.6, z: -2.2 }, Math.PI / 2);
 
+// Mur droit (wall3 a X = 5, rotation Y = -PI/2)
+createWallSticker(imageToyStoryTexture, { x: 4.98, y: 1.5, z: 2.2 }, -Math.PI / 2);
 
-// Mur du fond (le wall1 est à Z-5)
-image.position.set(0, 1.5, -4.99);
-
+// Mur derrière la porte (segments wall4 a Z = 5, rotation Y = PI)
+createWallSticker(imageLaHautTexture, { x: -3.0, y: 1.6, z: 4.98 }, Math.PI);
 
 
 /* function mouseMove(event) {
