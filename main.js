@@ -34,18 +34,34 @@ scene.add(axesHelper);
 const gridHelper = new THREE.GridHelper(10, 10);
 scene.add(gridHelper);
 
-// textures floor
+// textures floor (Ceramic)
 const textureLoader = new THREE.TextureLoader();
-const colortexture = textureLoader.load('/textures/oak.jpg');
-const normaltexture = textureLoader.load('/textures/oak_normal.jpg');
-const roughtexture = textureLoader.load('/textures/oak_rough.jpg');
-const aotexture = textureLoader.load('/textures/oak_ao.jpg');
+const ceramicColorTexture = textureLoader.load('/textures/Ceramic_Color.png');
+const ceramicNormalTexture = textureLoader.load('/textures/Ceramic_normal.png');
+const ceramicRoughnessTexture = textureLoader.load('/textures/Ceramic_rough.png');
 
-//textures walls
-const wallColorTexture = textureLoader.load('/textures/red_brick_diff.jpg');
-const wallNormalTexture = textureLoader.load('/textures/red_brick_nor.jpg');
-const wallRoughnessTexture = textureLoader.load('/textures/red_brick_rough.jpg');
-const wallAoTexture = textureLoader.load('/textures/red_brick_disp.png');
+// textures wood oak
+const oakColorTexture = textureLoader.load('/textures/oak.jpg');
+const oakNormalTexture = textureLoader.load('/textures/oak_normal.jpg');
+const oakRoughnessTexture = textureLoader.load('/textures/oak_rough.jpg');
+const oakAoTexture = textureLoader.load('/textures/oak_ao.jpg');
+
+// textures ceiling
+const sandstoneColorTexture = textureLoader.load('/textures/Sandstone_Color.png');
+const sandstoneNormalTexture = textureLoader.load('/textures/Sandstone_normal.png');
+const sandstoneRoughnessTexture = textureLoader.load('/textures/Sandstone_rough.png');
+
+//textures walls (Sandstone)
+const wallColorTexture = textureLoader.load('/textures/Sandstone_Color.png');
+const wallNormalTexture = textureLoader.load('/textures/Sandstone_normal.png');
+const wallRoughnessTexture = textureLoader.load('/textures/Sandstone_rough.png');
+
+//Textures sol bois
+const woodNormalTexture = textureLoader.load('/textures/wood_floor_nor_gl_4k.jpg');
+const woodColorTexture = textureLoader.load('/textures/wood_floor_diff_4k.jpg');
+const woodDispTexture = textureLoader.load('/textures/wood_floor_disp_4k.png');
+const woodRoughnessTexture = textureLoader.load('/textures/wood_floor_rough_4k.jpg');
+const woodAoTexture = oakAoTexture;
 
 const wallTextureRepeatFactor = 0.8;
 
@@ -53,9 +69,8 @@ function createWallMaterial(width, height) {
     const colorTexture = wallColorTexture.clone();
     const normalTexture = wallNormalTexture.clone();
     const roughnessTexture = wallRoughnessTexture.clone();
-    const aoTexture = wallAoTexture.clone();
 
-    [colorTexture, normalTexture, roughnessTexture, aoTexture].forEach((texture) => {
+    [colorTexture, normalTexture, roughnessTexture].forEach((texture) => {
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(width * wallTextureRepeatFactor, height * wallTextureRepeatFactor);
@@ -65,30 +80,36 @@ function createWallMaterial(width, height) {
         side: THREE.DoubleSide,
         map: colorTexture,
         normalMap: normalTexture,
-        roughnessMap: roughnessTexture,
-        aoMap: aoTexture
+        roughnessMap: roughnessTexture
     });
 }
 
 
-//Crée le sol
+//Crée le sol avec matériau Ceramic
 const planeGeometry = new THREE.PlaneGeometry(10, 10);
 const planeMaterial = new THREE.MeshStandardMaterial({ 
-    color: 0x808080,
+    color: 0xffffff,
     side : THREE.DoubleSide,
-    map : colortexture,
-    normalMap : normaltexture,
-    roughnessMap : roughtexture,
-    aoMap : aotexture
+    map : ceramicColorTexture,
+    normalMap : ceramicNormalTexture,
+    roughnessMap : ceramicRoughnessTexture
 });
 const sol = new THREE.Mesh(planeGeometry, planeMaterial);
-const plafond = new THREE.Mesh(planeGeometry, planeMaterial);
+const plafondGeometry = new THREE.PlaneGeometry(10, 10);
+const plafondMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0xffffff,
+    side : THREE.DoubleSide,
+    map : wallColorTexture,
+    normalMap : wallNormalTexture,
+    roughnessMap : wallRoughnessTexture
+});
+const plafond = new THREE.Mesh(plafondGeometry, plafondMaterial);
 scene.add(sol, plafond); 
 sol.rotation.x = -Math.PI / 2;
 plafond.position.y = 3;
 plafond.rotation.x = Math.PI / 2;
 
-//crée le plafond séparé
+//plafond séparé
 /*const ceilingGeometry = new THREE.PlaneGeometry(10, 10);
 const ceilingMaterial = new THREE.MeshStandardMaterial({ 
     color: 0x000000,
@@ -161,14 +182,63 @@ wall4Top.receiveShadow = true;
 
 //crée le material pour les bookshelves
 const bookshelfMaterial = new THREE.MeshStandardMaterial({
-    map : colortexture,
-    normalMap : normaltexture,
-    roughnessMap : roughtexture,
-    aoMap : aotexture
+    map : oakColorTexture,
+    normalMap : oakNormalTexture,
+    roughnessMap : oakRoughnessTexture,
+    aoMap : oakAoTexture
 });
 
+//matériau black
+const blackMaterial = new THREE.MeshStandardMaterial({
+    color: 0x000000,
+    roughness: 0.3,
+    metalness: 0,
+    emissive: 0x444444
+});
 
+//teinte destabourets
+const createTintedMaterial = (baseMaterial, hexColor) => {
+const m = baseMaterial.clone();
+m.color = new THREE.Color(hexColor);
+return m;
+};
 
+//matériau white
+const whiteMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    roughness: 0.3,
+    metalness: 0,
+    emissive: 0x444444
+});
+
+// Matériau teinté pour les tabourets (clone de `whiteMaterial`)
+const stoolTintMaterial = createTintedMaterial(whiteMaterial, 0xffe6e6);
+stoolTintMaterial.roughness = 0.35;
+stoolTintMaterial.emissive = new THREE.Color(0x111111);
+
+// Teintes spécifiques demandées: un bleu et deux jaunes
+const stoolBlueMaterial = createTintedMaterial(whiteMaterial, 0x4da6ff);
+stoolBlueMaterial.roughness = 0.35;
+stoolBlueMaterial.emissive = new THREE.Color(0x0a0a1a);
+
+const stoolYellowMaterial = createTintedMaterial(whiteMaterial, 0xffe066);
+stoolYellowMaterial.roughness = 0.35;
+stoolYellowMaterial.emissive = new THREE.Color(0x111100);
+
+const stoolRedMaterial = createTintedMaterial(whiteMaterial, 0xc94a4a);
+stoolRedMaterial.roughness = 0.45;
+stoolRedMaterial.emissive = new THREE.Color(0x220000);
+
+//Material bois sol
+const woodFloorMaterial = new THREE.MeshStandardMaterial({
+    map : woodColorTexture,
+    normalMap : woodNormalTexture,
+    roughnessMap : woodRoughnessTexture,
+    aoMap : woodAoTexture
+});
+
+// Appliquer le matériau bois au sol
+sol.material = woodFloorMaterial;
 
 // Caméra de pov
 camera.position.set(0, 1.65, 3.5);
@@ -302,14 +372,6 @@ loadModel({
 });
 
 loadModel({
-    path: '/models/meubles/bookshelf2.glb',
-    position: { x: 2.4, y: 0.5, z: 0.8 },
-    rotation: { x: 0, y: 0, z: 0 },
-    scale : { x: 2, y: 2, z: 2 },
-    material: bookshelfMaterial
-});
-
-loadModel({
     path: '/models/meubles/bookshelf3.glb',
     position: { x: -2, y: 0.5, z: -4.5},
     rotation: { x: 0, y: 0, z: 0 },
@@ -339,6 +401,7 @@ loadModel({
     position: { x: -4.4, y: 1.38, z: 2},
     rotation: { x: 0, y: 1.57, z: 0 },
     scale : { x: 1.8, y: 1.8, z: 1.8 },
+    material : blackMaterial
 });
 
 loadModel({
@@ -359,7 +422,7 @@ loadModel({
 
 loadModel({
     path: '/models/meubles/bookshelf2.glb',
-    position: { x: -4.8, y: 1.2, z: 4},
+    position: { x: -4.7, y: 1.2, z: 4},
     rotation: { x: 0, y: 1.57, z: 0 },
     scale : { x: 1.7, y: 2.8, z:2 },
     material: bookshelfMaterial
@@ -367,51 +430,58 @@ loadModel({
 
 loadModel({
     path: '/models/meubles/bookshelf2.glb',
-    position: { x: 4.8, y: 1.2, z: 4},
+    position: { x: 4.7, y: 1.2, z: 4},
     rotation: { x: 0, y: -1.57, z: 0 },
     scale : { x: 1.7, y: 2.8, z:2 },
     material: bookshelfMaterial
 });
 
 loadModel({
-    path: '/models/meubles/wardrobe.glb',
+    path: '/models/meubles/wardrobe2.glb',
     position: { x: 4.75, y: 1.4, z: 0.5 },
     rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 2.8 , y: 1.8, z: 1 }
+    scale: { x: 2.8 , y: 1.8, z: 1 },
+    material: woodFloorMaterial
 });
+
 loadModel({
     path: '/models/meubles/table-basse.glb',
     position: { x: 3.5, y: 0.5, z: -3.3 },
     rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 0.7, y: 0.7, z: 0.7 }
+    scale: { x: 0.7, y: 0.7, z: 0.7 },
+    material: woodFloorMaterial
 });
 
 loadModel({
     path: '/models/meubles/tabouret.glb',
     position: { x: 4, y: 0.2, z: -4.5 },
     rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 0.6, y: 0.6, z: 0.6 }
+    scale: { x: 0.6, y: 0.6, z: 0.6 },
+    material: stoolBlueMaterial
 });
 
 loadModel({
     path: '/models/meubles/tabouret.glb',
     position: { x: 4.5, y: 0.2, z: -3 },
     rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 0.6, y: 0.6, z: 0.6 }
+    scale: { x: 0.6, y: 0.6, z: 0.6 },
+    material: stoolYellowMaterial
 });
 
 loadModel({
     path: '/models/meubles/tabouret.glb',
     position: { x: 3, y: 0.2, z: -2.8 },
     rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 0.6, y: 0.6, z: 0.6 }
+    scale: { x: 0.6, y: 0.6, z: 0.6 },
+    material: stoolRedMaterial
 });
 
 loadModel({
     path: '/models/meubles/chaise.glb',
     position: { x: -3.5, y: 0.7, z: 2 },
     rotation: { x: 0, y: -1.57, z: 0 },
-    scale: { x: 1.4, y: 1.4, z: 1.4 }
+    scale: { x: 1.4, y: 1.4, z: 1.4 },
+    material : woodFloorMaterial
 });
 
 loadModel({
@@ -421,12 +491,21 @@ loadModel({
     scale: { x: 1, y: 1, z: 1 }
 });
 
+loadModel({
+    path: '/models/meubles/pixar round poster 3d model.glb',
+    position: { x: 0, y: 0.2, z: -1 },
+    rotation: { x: -1.5, y: -1.57, z: 0 },
+    scale: { x: 0.1, y: 4, z: 4 }
+});
+
+
+//===========================OBJETS PIXAR====================================
 
 //load les objets
 loadModel({
     path: '/models/piston_cup.glb',
-    position: { x: 0, y: 1.1, z: 0.0 },
-    rotation: { x: 0, y: -1.6, z: 0 },
+    position: { x: 4.7, y: 1.2, z: 4},
+    rotation: { x: 0, y: Math.PI/2, z: 0 },
     scale : { x: 0.35, y: 0.35, z: 0.35 }
 });
 
@@ -434,7 +513,7 @@ loadModel({
     path: '/models/bycicle_redsdream.glb',
     position: { x: 0, y: 0.59, z: 0 },
     rotation: { x: 0, y: 1, z: 0 },
-    scale: { x: 0.45, y: 0.45, z: 0.45 }
+    scale: { x:0.7, y: 0.7, z: 0.7 }
 });
 
 loadModel({
@@ -460,15 +539,7 @@ loadModel({
 });
 */
 
-loadModel({
-    path: '/models/meubles/pixar round poster 3d model.glb',
-    position: { x: 0, y: 0.2, z: -1 },
-    rotation: { x: -1.5, y: -1.57, z: 0 },
-    scale: { x: 0.1, y: 4, z: 4 }
-});
 
-
-//Load tous les modeles
 loadModel({
     path: '/models/cailloux_1001pattes.glb',
     position: { x: -0.85, y: 1, z: 0 },
@@ -582,13 +653,17 @@ canvas.addEventListener('click', (event) => {
 
 
 //mise en place des stickers sur les murs
-const imageNemoTexture = textureLoader.load('/textures/sticker_nemo.png');
-const imageCarsTexture = textureLoader.load('/textures/sticker_cars.png');
-const imageRatatouilleTexture = textureLoader.load('/textures/sticker_ratatouille.png');
-const imageToyStoryTexture = textureLoader.load('/textures/sticker_toy_story.png');
-const imageLaHautTexture = textureLoader.load('/textures/sticker_lahaut.png');
+const imageNemoTexture = textureLoader.load('/textures/sticker_nemo2.jpg');
+const imageCarsTexture = textureLoader.load('/textures/cars_sticker2.jpg');
+const imageRatatouilleTexture = textureLoader.load('/textures/sticker_ratatouille2.jpg');
+const imageToyStoryTexture = textureLoader.load('/textures/sticker_toystory2.jpg');
+const imageLaHautTexture = textureLoader.load('/textures/sticker_up2.jpg');
+const imageViceVersaTexture = textureLoader.load('/textures/sticker_insideout2.jpg');
+const imageWallETexture = textureLoader.load('/textures/sticker_walle2.jpg');
+const image1001pattesTexture = textureLoader.load('/textures/sticker_bugslife2.jpg');
+const imageMonstresetcieTexture = textureLoader.load('/textures/sticker_monstresetcie2.jpg');
 
-function createWallSticker(texture, position, rotationY = 0) {
+function createWallSticker(texture, position, rotationY, scaleX, scaleY = 1) {
         const stickerMaterial = new THREE.MeshBasicMaterial({
                 map: texture,
                 transparent: true,
@@ -598,22 +673,27 @@ function createWallSticker(texture, position, rotationY = 0) {
         const sticker = new THREE.Mesh(stickerGeometry, stickerMaterial);
         sticker.position.set(position.x, position.y, position.z);
         sticker.rotation.y = rotationY;
+        sticker.scale.set(scaleX, scaleY, 1);
         scene.add(sticker);
 }
 
-// Mur du fond (wall1 a Z = -5)
-createWallSticker(imageNemoTexture, { x: 2.9, y: 1.7, z: -4.98 }, 0);
-createWallSticker(imageCarsTexture, { x: -2.4, y: 1.4, z: -4.98 }, 0);
+// Mur du fond
+createWallSticker(imageViceVersaTexture, { x: 3.5, y: 1.7, z: -4.95 }, 0, 0.8, 1.4);
+createWallSticker(imageNemoTexture, { x: 1.5, y: 1.7, z: -4.95 }, 0, 0.8,1.4);
+createWallSticker(imageCarsTexture, { x: -0.5, y: 1.7, z: -4.98 }, 0, 0.8, 1.4);
 
-// Mur gauche (wall2 a X = -5, rotation Y = PI/2)
-createWallSticker(imageRatatouilleTexture, { x: -4.98, y: 1.6, z: -2.2 }, Math.PI / 2);
+// Mur gauche
+createWallSticker(imageRatatouilleTexture, { x: -4.95, y: 1.8, z: -3.5 }, Math.PI / 2, 0.8, 1.4);
+createWallSticker(image1001pattesTexture, { x: -4.95, y: 1.8, z: -1.5 }, Math.PI / 2, 0.8, 1.4);
 
-// Mur droit (wall3 a X = 5, rotation Y = -PI/2)
-createWallSticker(imageToyStoryTexture, { x: 4.98, y: 1.5, z: 2.2 }, -Math.PI / 2);
 
-// Mur derrière la porte (segments wall4 a Z = 5, rotation Y = PI)
-createWallSticker(imageLaHautTexture, { x: -3.0, y: 1.6, z: 4.98 }, Math.PI);
+// Mur droit
+createWallSticker(imageToyStoryTexture, { x: 4.95, y: 1.7, z: -3.5 }, -Math.PI / 2, 0.8, 1.4);
 
+// Mur derrière le spawn
+createWallSticker(imageLaHautTexture, { x: -3.5, y: 1.7, z: 4.95 }, Math.PI, 0.8, 1.4);
+createWallSticker(imageWallETexture, { x: -1.5, y: 1.7, z: 4.95 }, Math.PI, 0.8, 1.4);
+createWallSticker(imageMonstresetcieTexture, { x: 0.5, y: 1.7, z: 4.95 }, Math.PI, 0.8, 1.4);
 
 /* function mouseMove(event) {
     const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
