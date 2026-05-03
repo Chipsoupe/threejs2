@@ -363,13 +363,7 @@ function loadModel({
 }
 
 //load les meubles
-loadModel({
-    path: '/models/meubles/pixar bed .glb',
-    position: { x: -3.7, y: 0.7, z: -3.2 },
-    rotation: { x: 0, y: 1.57, z: 0 },
-    scale : { x: 3, y: 3, z: 4 },
 
-});
 
 loadModel({
     path: '/models/meubles/bookshelf3.glb',
@@ -485,18 +479,27 @@ loadModel({
 });
 
 loadModel({
+    path: '/models/meubles/pixar bed .glb',
+    position: { x: -3.7, y: 0.7, z: -3.2 },
+    rotation: { x: 0, y: 1.57, z: 0 },
+    scale : { x: 3, y: 3, z: 4 },
+
+});
+
+/*
+loadModel({
     path: '/models/meubles/wooden letter blocks.glb',
     position: { x: -3.5, y: 2, z: -4.5 },
     rotation: { x: 0, y: -1.57, z: 0 },
     scale: { x: 1, y: 1, z: 1 }
-});
+});*/
 
-loadModel({
+/*loadModel({
     path: '/models/meubles/pixar round poster 3d model.glb',
     position: { x: 0, y: 0.2, z: -1 },
     rotation: { x: -1.5, y: -1.57, z: 0 },
     scale: { x: 0.1, y: 4, z: 4 }
-});
+});*/
 
 
 //===========================OBJETS PIXAR====================================
@@ -504,30 +507,38 @@ loadModel({
 //load les objets
 loadModel({
     path: '/models/piston_cup.glb',
-    position: { x: 4.7, y: 1.2, z: 4},
-    rotation: { x: 0, y: Math.PI/2, z: 0 },
-    scale : { x: 0.35, y: 0.35, z: 0.35 }
+    position: { x: -4.4, y: 1.3, z: 0},
+    rotation: { x: 0, y: Math.PI, z: 0 },
+    scale : { x: 0.5, y: 0.5, z: 0.5 }
 });
 
 loadModel({
     path: '/models/bycicle_redsdream.glb',
-    position: { x: 0, y: 0.59, z: 0 },
-    rotation: { x: 0, y: 1, z: 0 },
-    scale: { x:0.7, y: 0.7, z: 0.7 }
+    position: { x: 4.7, y: 0.42, z: 3.05 },
+    rotation: { x: 0, y: 2, z: 0.2 },
+    scale: { x:0.85, y:0.85, z: 0.85 }
 });
 
 loadModel({
+    path: '/models/casquette_monster_and_co.glb',
+    position: { x: -3.1, y: 1.3, z: 1.7 },
+    rotation: { x: 0, y: Math.PI/3, z: -0.8 },
+    scale: { x: 0.3, y: 0.3, z: 0.3
+     }
+}); 
+
+loadModel({
     path: '/models/bingbongcar_viceversa.glb',
-    position: { x: 0.85, y: 0.47, z: 0 },
-    rotation: { x: 0, y: -1.2, z: 0 },
-    scale: { x: 0.7, y: 0.7, z: 0.7 }
+    position: { x:0.5, y: 0.23, z: 4.2 },
+    rotation: { x: 0, y: 1, z: 0 },
+    scale: { x: 1.3, y: 1.3, z: 1.3 }
 });
 
 loadModel({
     path: '/models/badge_soul.glb',
-    position: { x: -0.85, y: 0.47, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    position: { x: -4.38, y: 1.5, z: 2.3 },
+    rotation: { x: 0, y: 0, z: -1.4 },
+    scale: { x: 0.15, y: 0.05, z: 0.15 }
 });
 
 /*
@@ -542,93 +553,87 @@ loadModel({
 
 loadModel({
     path: '/models/cailloux_1001pattes.glb',
-    position: { x: -0.85, y: 1, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
+    position: { x: 3, y: 0.58, z: -2.8},
+    rotation: { x: 0, y:4, z: 0 },
     scale: { x: 0.2, y: 0.2, z: 0.2 }
 });
 
 loadModel({
-    path: '/models/casques_lifted.glb',
-    position: { x: -0.85, y: 1.5, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    path: '/models/casque_lifted.glb',
+    position: { x: -4.1, y: 1.09, z: 2.8 },
+    rotation: { x:1.25, y: 0, z: 0 },
+    scale: { x: 0.35, y: 0.35, z: 0.35 }
 });
 
-loadModel({
-    path: '/models/casquette_monster_and_co.glb',
-    position: { x: -0.85, y: 2, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
-});
 
 loadModel({
     path: '/models/chapeau_elio.glb',
-    position: { x: -0.85, y: 2.5, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    position: { x: -4.7, y: 1.15, z: 4 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 0.4, y: 0.4, z: 0.4 }
 });
 
 loadModel({
     path: '/models/chapeau-of-wallyB_the-adventure-of-andre-and-wallyB.glb',
-    position: { x: -0.85, y: 3, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    position: { x: -4.7, y: 0.4, z: 4.4 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 0.3, y: 0.3, z: 0.3 }
 });
 
 loadModel({
     path: '/models/collier_chien_lahaut.glb',
-    position: { x: -0.85, y: 3.5, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    position: { x: 4.5, y: 0.55, z: -3 },
+    rotation: { x: 0, y: 4, z: 0 },
+    scale: { x: 0.5, y: 0.5, z: 0.5 }
 });
 
 loadModel({
     path: '/models/eponge_elementaire.glb',
-    position: { x: -0.85, y: 4, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    position: { x: -3.8, y: 0.9, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 0.3, y: 0.3, z: 0.3 }
 });
 
 loadModel({
-    path: '/models/eve.glb.glb',
-    position: { x: -0.85, y: 4.5, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    path: '/models/eve.glb',
+    position: { x: -4.2, y: 0.7, z: -0.93 },
+    rotation: { x: 0.2, y: 0, z: 0 },
+    scale: { x: 1.5, y: 1.5, z: 1.5 }
 });
 
 loadModel({
     path: '/models/gateaux_rebelle.glb',
-    position: { x: -0.85, y: 0.47, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    position: { x: 3.5, y: 0.9, z: -3.3 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 0.4, y: 0.4, z: 0.4 }
 });
 
 loadModel({
     path: '/models/gemephoenix_enavant.glb',
-    position: { x: -0.85, y: 0.47, z: 0 },
+    position: { x: 4.7, y: 1.1, z: 4.3},
     rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    scale: { x: 0.3, y: 0.3, z: 0.3 }
 });
 
 loadModel({
     path: '/models/guitare_coco.glb',
-    position: { x: -0.85, y: 0.47, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    position: { x: 4.8, y: 0.68, z: -0.92},
+    rotation: { x:-1.4, y:0.5, z:1.5 },
+    scale: { x: 1.3, y: 1.3, z: 1.3 }
 });
 
 loadModel({
-    path: '/models/lotso_toystory.glb',
-    position: { x: -0.85, y: 0.47, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    path: '/models/lotso_toystory3.glb',
+    position: { x: -2, y: 1.3, z: -4.5 },
+    rotation: { x: 0, y: -Math.PI/2, z: 0 },
+    scale: { x:0.7, y:0.7, z:0.7 }
 });
 
 loadModel({
-    path: '/models/vezpa_luca.glb',
-    position: { x: -0.85, y: 0.47, z: 0 },
-    rotation: { x: 1.8, y: 1, z: 0 },
-    scale: { x: 0.2, y: 0.2, z: 0.2 }
+    path: '/models/vespa_luca.glb',
+    position: { x: 0.5, y: 0.63, z: -4.52 },
+    rotation: { x: 0, y: Math.PI/2, z: -0.2 },
+    scale: { x: 1.5, y: 1.5, z: 1.5 }
 });
 
 
