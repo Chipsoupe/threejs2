@@ -486,20 +486,19 @@ loadModel({
 
 });
 
-/*
 loadModel({
     path: '/models/meubles/wooden letter blocks.glb',
     position: { x: -3.5, y: 2, z: -4.5 },
     rotation: { x: 0, y: -1.57, z: 0 },
     scale: { x: 1, y: 1, z: 1 }
-});*/
+});
 
-/*loadModel({
+loadModel({
     path: '/models/meubles/pixar round poster 3d model.glb',
-    position: { x: 0, y: 0.2, z: -1 },
-    rotation: { x: -1.5, y: -1.57, z: 0 },
-    scale: { x: 0.1, y: 4, z: 4 }
-});*/
+    position: { x: 0, y: 0.01, z: -1 },
+    rotation: { x: -1.56, y: -1.57, z: 0 },
+    scale: { x: 0.1, y: 5, z: 5 }
+});
 
 
 //===========================OBJETS PIXAR====================================
@@ -524,7 +523,7 @@ loadModel({
     position: { x: -3.1, y: 1.3, z: 1.7 },
     rotation: { x: 0, y: Math.PI/3, z: -0.8 },
     scale: { x: 0.3, y: 0.3, z: 0.3
-     }
+    }
 }); 
 
 loadModel({
