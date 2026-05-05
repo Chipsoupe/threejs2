@@ -348,6 +348,7 @@ function loadModel({
                 });
             }
 
+            model.userData.path = path; //ligne rajoutée par thikana
             models.push(model);
             scene.add(model);
 
@@ -361,10 +362,90 @@ function loadModel({
         }
     );
 }
+    
+const objetsPixar = {
+    '/models/bycicle_redsdream.glb': ['red\'s dream', 'reds dream'],
+    '/models/piston_cup.glb': ['cars', 'car'], 
+    '/models/casquette_monster_and_co.glb': ['monstres et cie', 'monstres & cie', 'monsters inc'],
+    '/models/bingbongcar_viceversa.glb': ['vice-versa', 'vice versa', 'inside out'],
+    '/models/badge_soul.glb': ['soul'],
+    '/models/cailloux_1001pattes.glb': ['1001 pattes', 'mille et une pattes', 'a bug\'s life'],
+    '/models/casque_lifted.glb': ['lifted', 'extra-terrien'],
+    '/models/chapeau_elio.glb': ['elio'],
+    '/models/chapeau-of-wallyB_the-adventure-of-andre-and-wallyB.glb': ['les aventures d\'andre et wally b', 'wally b'],
+    '/models/collier_chien_lahaut.glb': ['la-haut', 'la haut', 'up'],
+    '/models/eponge_elementaire.glb': ['elementaire', 'elemental'],
+    '/models/eve.glb': ['wall-e', 'walle', 'wall e'],
+    '/models/gateaux_rebelle.glb': ['rebelle', 'brave'],
+    '/models/gemephoenix_enavant.glb': ['en avant', 'onward'],
+    '/models/guitare_coco.glb': ['coco'],
+    '/models/lotso_toystory3.glb': ['toy story 3'],
+    '/models/vespa_luca.glb': ['luca']
+};
+
+//API
+const API_KEY = '1a68d10a3ade0c16fbd9de20d20e87fa';
+
+// Raycaster and pointer for click detection
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+canvas.addEventListener('click', async (event) => {
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    
+    const intersects = raycaster.intersectObjects(models, true);
+    
+    if (intersects.length > 0) {
+        
+        let clickedModel = intersects[0].object;
+        while (clickedModel.parent && !clickedModel.userData.path) {
+            clickedModel = clickedModel.parent;
+        }
+
+        const modelPath = clickedModel.userData.path;
+
+        
+        if (modelPath && objetsPixar[modelPath]) {
+            // Fait apparaître une boîte de dialogue pour taper le nom
+            const reponseJoueur = window.prompt("De quel film Pixar provient cet objet ?");
+            
+            if (reponseJoueur) {
+                
+                const reponsePropre = reponseJoueur.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const reponsesAcceptees = objetsPixar[modelPath].map(r => r.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+                
+                
+                if (reponsesAcceptees.includes(reponsePropre)) {
+                    
+                    
+                    try {
+                        const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(reponsesAcceptees[0])}&language=fr-FR`);
+                        const data = await res.json();
+                        
+                        if (data.results && data.results.length > 0) {
+                            const film = data.results[0];
+                            // Affiche les infos du film à l'écran
+                            alert(`🎉 BRAVO !\n\n🎬 TITRE : ${film.title}\n⭐ NOTE : ${film.vote_average}/10\n📖 RÉSUMÉ : ${film.overview}`);
+                            
+
+                            
+                        } else {
+                            alert("Bravo ! (Les infos du film sont introuvables)");
+                        }
+                    } catch (erreur) {
+                        console.error("Erreur API :", erreur);
+                    }
+                } else {
+                    alert("❌ Mauvaise réponse... Essaie encore !");
+                }
+            }
+        }
+    }
+});
 
 //load les meubles
-
-
 loadModel({
     path: '/models/meubles/bookshelf3.glb',
     position: { x: -2, y: 0.5, z: -4.5},
@@ -375,8 +456,7 @@ loadModel({
 
 loadModel({
     path: '/models/meubles/doorframe.glb',
-    position: { x: 2.6 , y: 1.1, z: 5.1
-    },
+    position: { x: 2.6 , y: 1.1, z: 5.1 },
     rotation: { x: 0, y: 0, z: 0 },
     scale : { x: 1.7, y: 1.05, z: 1.5 },
     material: bookshelfMaterial
@@ -637,24 +717,6 @@ loadModel({
 
 
 const testModel = models[0]; // Remplacer par le modèle quon veut
-
-// ajouter des interactions click // 
-const raycaster = new THREE.Raycaster();
-const pointer  = new THREE.Vector2();
-
-canvas.addEventListener('click', (event) => {
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFromCamera(pointer, camera);
-    const intersects = raycaster.intersectObjects(models, true);
-    if (intersects.length > 0) {
-        const first = intersects[0];
-        console.log('Model clicked:', first.object);
-    }
-    ;
-
-});
-
 
 //mise en place des stickers sur les murs
 const imageNemoTexture = textureLoader.load('/textures/sticker_nemo2.jpg');

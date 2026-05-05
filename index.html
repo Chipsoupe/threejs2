@@ -3,27 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <title>Première scène Three.js</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-        }
-        canvas.webgl {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.game-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Fond sombre léger */
+    backdrop-filter: blur(8px); /* L'effet de flou sur la scène 3D */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-family: 'Poppins', sans-serif;
+}
+
+.modal-content {
+    text-align: center;
+    color: white;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Badge de points (Jaune) */
+.points-badge {
+    background: #fcd34d;
+    color: #453000;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(252, 211, 77, 0.3);
+}
+
+.modal-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Input style "Pilule" */
+.input-wrapper {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: white;
+}
+
+.input-icon { margin-right: 15px; opacity: 0.7; }
+
+#input-film {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 18px;
+    width: 100%;
+    outline: none;
+}
+
+#input-film::placeholder { color: rgba(255,255,255,0.6); }
+
+/* Bouton Valider (Bleu nuit) */
+.btn-submit {
+    background: #0a2472;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+    box-shadow: 0 10px 20px rgba(10, 36, 114, 0.4);
+}
+
+.btn-submit:hover {
+    background: #0e32a1;
+    transform: translateY(-2px);
+}
+
+.timer-text {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+</style>
 </head>
 <body>
+
+    
     <canvas class="webgl"></canvas>
 
     <script type="module" src="/main.js"></script>
+
+<!-- Fenêtre de réponse stylisée -->
+<div id="modal-reponse" class="game-modal" style="display: none;">
+    <div class="modal-content">
+        <!-- Badge de points dynamique -->
+        <div id="badge-points" class="points-badge">
+            <span class="star-icon">★</span> +<span id="points-value">20</span> pts
+        </div>
+
+        <h2 class="modal-title">À quel film appartient cet objet ?</h2>
+
+        <!-- Zone de saisie -->
+        <div class="input-wrapper">
+            <span class="input-icon">🎬</span>
+            <input type="text" id="input-film" placeholder="Nom du film..." autocomplete="off">
+        </div>
+
+        <!-- Timer (optionnel mais utile) -->
+        <p id="timer-display" class="timer-text">Temps restant : --s</p>
+
+        <!-- Bouton Valider -->
+        <button id="btn-valider" class="btn-submit">
+            VALIDER <span class="check-icon">✓</span>
+        </button>
+    </div>
+</div>
+
 </body>
 </html>
