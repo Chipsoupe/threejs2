@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pixar Quest – La Collection Cachée</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixar Quest – La Collection Cachée</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
+<!-- ============================================================
+     1. HOME SCREEN
+     ============================================================ -->
 <div class="screen active" id="screen-home">
   <div class="home-content">
     <div class="home-title-card">
@@ -20,42 +20,427 @@
       <div class="subtitle">La Collection Cachée</div>
     </div>
     <div class="home-buttons">
-      <button class="btn btn-yellow" onclick="showRules()">▶ COMMENCER</button>
-      <button class="btn btn-navy" onclick="openParams()">⚙ PARAMÈTRES</button>
+      <button id="btn-start"       class="btn btn-yellow" onclick="showRules()">▶ COMMENCER</button>
+      <button id="btn-params-home" class="btn btn-navy"   onclick="openParams()">⚙ PARAMÈTRES</button>
+    </div>
+  </div>
+
+  <div class="home-footer">
+    <button class="footer-btn" onclick="openModal('modal-lang')">
+      <span class="footer-icon">🌐</span>
+      <span id="footer-lang-label">LANGUES</span>
+    </button>
+    <button class="footer-btn" onclick="openModal('modal-legal')">
+      <span class="footer-icon">©</span>
+      <span id="footer-legal-label">LÉGAL</span>
+    </button>
+    <button class="footer-btn" onclick="openModal('modal-credits')">
+      <span class="footer-icon">ℹ</span>
+      <span id="footer-credits-label">CRÉDITS</span>
+    </button>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     2. RULES SCREEN
+     ============================================================ -->
+<div class="screen" id="screen-rules">
+  <div class="rules-panel">
+    <h2 id="rules-title">📋 Règlement du jeu</h2>
+    <p class="rules-sub" id="rules-sub">Pixar Quest — La Collection Cachée</p>
+
+    <ul class="rules-list">
+      <li>
+        <div class="rule-icon yellow">🎬</div>
+        <div class="rule-text">
+          <strong id="rule1-title">Identifie l'objet</strong>
+          <span   id="rule1-text">Un objet emblématique d'un film Pixar t'est présenté. Trouve à quel film il appartient !</span>
+        </div>
+      </li>
+      <li>
+        <div class="rule-icon navy">⏱</div>
+        <div class="rule-text">
+          <strong id="rule2-title">Joue contre la montre</strong>
+          <span   id="rule2-text">Tu as un temps limité par question selon la difficulté choisie. Plus tu réponds vite, plus tu marques de points bonus !</span>
+        </div>
+      </li>
+      <li>
+        <div class="rule-icon navy">✍️</div>
+        <div class="rule-text">
+          <strong id="rule3-title">Tape le nom du film</strong>
+          <span   id="rule3-text">Saisis le nom du film en français ou en anglais. Une correspondance approximative est acceptée.</span>
+        </div>
+      </li>
+      <li>
+        <div class="rule-icon red">⭐</div>
+        <div class="rule-text">
+          <strong id="rule4-title">Cumule un maximum de points</strong>
+          <span   id="rule4-text">Chaque bonne réponse rapporte des points. Enchaîne les bonnes réponses pour un bonus combo !</span>
+        </div>
+      </li>
+    </ul>
+
+    <hr class="rules-divider">
+
+    <p id="pts-label" style="text-align:center; font-weight:800; color:var(--navy); font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;">
+      Points par difficulté
+    </p>
+    <div class="rules-scoring">
+      <div class="score-pill easy">
+        <div class="diff">Facile</div>
+        <div class="pts">+10</div>
+        <div class="label pts-per-answer">pts / réponse</div>
+        <div class="label" style="margin-top:4px; font-size:10px;">⏱ 45s</div>
+      </div>
+      <div class="score-pill normal">
+        <div class="diff">Normal</div>
+        <div class="pts">+20</div>
+        <div class="label pts-per-answer">pts / réponse</div>
+        <div class="label" style="margin-top:4px; font-size:10px;">⏱ 30s</div>
+      </div>
+      <div class="score-pill hard">
+        <div class="diff">Difficile</div>
+        <div class="pts">+30</div>
+        <div class="label pts-per-answer">pts / réponse</div>
+        <div class="label" style="margin-top:4px; font-size:10px;">⏱ 15s</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button id="btn-rules-back"  class="btn btn-navy"   style="flex:1; justify-content:center;" onclick="showScreen('screen-home')">← Retour</button>
+      <button id="btn-choose-diff" class="btn btn-yellow" style="flex:1; justify-content:center;" onclick="showScreen('screen-difficulty')">Choisir la difficulté →</button>
     </div>
   </div>
 </div>
 
-<div class="screen" id="screen-rules">
-  <div class="rules-panel">
-    <h2>📋 Règlement du jeu</h2>
-    <button onclick="showScreen('screen-home')">Retour</button>
+
+<!-- ============================================================
+     3. DIFFICULTY SCREEN
+     ============================================================ -->
+<div class="screen" id="screen-difficulty">
+  <div style="display:flex; flex-direction:column; align-items:center;">
+    <div class="diff-header">
+      <div class="diff-header-card">
+        <h2>Pixar Quest</h2>
+      </div>
+      <p id="select-challenge">Select Your Challenge</p>
+    </div>
+
+    <div class="diff-cards">
+      <!-- EASY -->
+      <div class="diff-card easy" onclick="startLoading('easy')">
+        <h3>FACILE</h3>
+        <div class="diff-film-icons" id="icons-easy"></div>
+        <div class="diff-timer"><span class="timer-icon">⏱</span> 45s</div>
+        <button id="btn-choose-easy" class="btn btn-navy" style="width:100%; justify-content:center;">Choose Facile</button>
+      </div>
+      <!-- NORMAL -->
+      <div class="diff-card normal" onclick="startLoading('normal')">
+        <h3>NORMAL</h3>
+        <div class="diff-film-icons" id="icons-normal"></div>
+        <div class="diff-timer"><span class="timer-icon">⏱</span> 30s</div>
+        <button id="btn-choose-normal" class="btn btn-navy" style="width:100%; justify-content:center;">Choose Normal</button>
+      </div>
+      <!-- HARD -->
+      <div class="diff-card hard" onclick="startLoading('hard')">
+        <h3>DIFFICILE</h3>
+        <div class="diff-film-icons" id="icons-hard"></div>
+        <div class="diff-timer"><span class="timer-icon" style="color:var(--red-dark)">⏱</span> 15s</div>
+        <button id="btn-choose-hard" class="btn btn-red" style="width:100%; justify-content:center;">Choose Difficile</button>
+      </div>
+    </div>
   </div>
 </div>
 
+
+<!-- ============================================================
+     4. LOADING SCREEN
+     ============================================================ -->
+<div class="screen" id="screen-loading">
+  <div class="loading-title">
+    <span class="lamp-emoji">🪔</span>
+    Pixar Quest
+  </div>
+  <div class="loading-bar-container">
+    <div class="loading-bar-fill" id="loading-bar"></div>
+  </div>
+  <div class="loading-text" id="loading-text">Entering the Toybox...</div>
+</div>
+
+
+<!-- ============================================================
+     5. GAME SCREEN
+     ============================================================ -->
 <div class="screen" id="screen-game">
   <div class="game-header">
-    <div class="game-score-badge">⭐ <span id="score-display">0</span></div>
+    <div class="game-score-badge">⭐ <span id="score-display">0</span> pts</div>
+    <div class="game-progress" id="game-progress"></div>
+    <div class="game-timer" id="game-timer">⏱ <span id="timer-display">30</span>s</div>
   </div>
 
   <div class="game-center">
+    <div class="pts-badge">✦ +<span id="pts-per-q">20</span> pts</div>
     <div class="object-display" id="object-display">🐟</div>
-    <input id="answer-input" type="text" placeholder="Nom du film">
-    <button onclick="validateAnswer()">VALIDER</button>
+    <div class="question-text">À quel film appartient cet objet ?</div>
+    <input
+      class="answer-input"
+      id="answer-input"
+      type="text"
+      placeholder="🎬 Nom du film..."
+      onkeydown="if(event.key==='Enter') validateAnswer()"
+    >
+    <button class="validate-btn" onclick="validateAnswer()">VALIDER ✔</button>
+    <div class="feedback-msg" id="feedback-msg"></div>
   </div>
 </div>
 
+
+<!-- ============================================================
+     6. RESULT SCREEN
+     ============================================================ -->
 <div class="screen" id="screen-result">
   <div class="result-card">
-    <div id="result-score">0 PTS</div>
-    <button onclick="replay()">Rejouer</button>
+    <div class="result-star">⭐</div>
+    <div class="result-title">Pixar Quest</div>
+    <div class="result-found" id="result-found">J'ai trouvé 0/0 films !</div>
+    <div class="result-score-label" id="result-score-label">SCORE TOTAL</div>
+    <div class="result-score-value" id="result-score">0 PTS</div>
+    <button class="result-share" id="result-share-btn" onclick="shareResult()">← Partager sur mes réseaux</button>
+    <button class="result-replay" id="result-replay-btn" onclick="replay()">↺ Rejouer</button>
+    <div class="result-handle">@PIXARTRIVIAAPP</div>
   </div>
 </div>
 
-<div id="modal-params">
-  <button onclick="closeParams()">Fermer</button>
+
+<!-- ============================================================
+     MODAL — LANGUE
+     ============================================================ -->
+<div class="modal-overlay" id="modal-lang">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-lang-title">🌐 Langue / Language</h2>
+      <button class="modal-close-btn" onclick="closeModal('modal-lang')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modal-lang-hint" style="font-size:13px; color:#888; margin-bottom:16px;">
+        Choisissez votre langue / Choose your language
+      </p>
+      <div class="lang-grid">
+        <div class="lang-option selected" id="lang-fr" onclick="selectLang('fr')">
+          <div class="lang-flag">🇫🇷</div>
+          <div>
+            <div class="lang-name">Français</div>
+            <div class="lang-native">Français</div>
+          </div>
+          <div class="lang-check">✔</div>
+        </div>
+        <div class="lang-option" id="lang-en" onclick="selectLang('en')">
+          <div class="lang-flag">🇬🇧</div>
+          <div>
+            <div class="lang-name">English</div>
+            <div class="lang-native">English</div>
+          </div>
+          <div class="lang-check">✔</div>
+        </div>
+      </div>
+      <div style="margin-top:20px; padding:14px; background:#fffbea; border-radius:14px; border:1.5px solid var(--yellow);">
+        <p id="modal-lang-soon" style="font-size:12px; color:#8B6A00; font-weight:700; text-align:center;">
+          ⚠️ D'autres langues seront disponibles prochainement.
+        </p>
+      </div>
+      <button id="modal-lang-confirm" class="btn btn-yellow" style="width:100%; justify-content:center; margin-top:16px;" onclick="applyLang()">
+        Confirmer / Confirm
+      </button>
+    </div>
+  </div>
 </div>
 
+
+<!-- ============================================================
+     MODAL — LÉGAL
+     ============================================================ -->
+<div class="modal-overlay" id="modal-legal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-legal-title">© Mentions Légales</h2>
+      <button class="modal-close-btn" onclick="closeModal('modal-legal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="legal-tabs">
+        <button class="legal-tab active" id="tab-cgu"     onclick="switchLegalTab('cgu', this)">CGU</button>
+        <button class="legal-tab"        id="tab-privacy" onclick="switchLegalTab('privacy', this)">Confidentialité</button>
+        <button class="legal-tab"        id="tab-cookies" onclick="switchLegalTab('cookies', this)">Cookies</button>
+      </div>
+
+      <div class="legal-scroll">
+        <!-- CGU -->
+        <div class="legal-content active" id="legal-cgu">
+          <h3>Conditions Générales d'Utilisation</h3>
+          <p>En utilisant Pixar Quest, vous acceptez les présentes conditions d'utilisation. Ce jeu est proposé à titre de divertissement uniquement.</p>
+          <h3>Propriété intellectuelle</h3>
+          <p>Pixar Quest est un jeu indépendant de culture générale. Les noms de films mentionnés appartiennent à leurs éditeurs respectifs (Pixar / Disney). Ce jeu n'est pas affilié, sponsorisé ni approuvé par Pixar ou The Walt Disney Company.</p>
+          <h3>Responsabilité</h3>
+          <p>Le développeur décline toute responsabilité en cas d'interruption du service, de perte de données ou d'erreur dans les questions proposées.</p>
+          <h3>Modification des CGU</h3>
+          <p>Ces conditions peuvent être modifiées à tout moment. L'utilisation continue du jeu vaut acceptation des nouvelles conditions.</p>
+          <h3>Contact</h3>
+          <p>Pour toute question : <strong>contact@pixarquest.app</strong></p>
+        </div>
+
+        <!-- PRIVACY -->
+        <div class="legal-content" id="legal-privacy">
+          <h3>Politique de confidentialité</h3>
+          <p>Pixar Quest respecte votre vie privée. Voici comment nous traitons vos données :</p>
+          <h3>Données collectées</h3>
+          <ul>
+            <li>Scores et statistiques de jeu (stockés localement)</li>
+            <li>Langue sélectionnée</li>
+            <li>Préférences audio</li>
+          </ul>
+          <h3>Données non collectées</h3>
+          <ul>
+            <li>Aucune donnée personnelle identifiable</li>
+            <li>Aucun compte requis</li>
+            <li>Aucun suivi publicitaire</li>
+          </ul>
+          <h3>Stockage</h3>
+          <p>Toutes les données sont stockées uniquement sur votre appareil. Aucune donnée n'est transmise à des serveurs tiers.</p>
+          <h3>Vos droits</h3>
+          <p>Vous pouvez effacer vos données à tout moment en effaçant le cache de votre navigateur.</p>
+        </div>
+
+        <!-- COOKIES -->
+        <div class="legal-content" id="legal-cookies">
+          <h3>Politique de cookies</h3>
+          <p>Pixar Quest utilise un nombre minimal de technologies de stockage pour le bon fonctionnement du jeu.</p>
+          <h3>Cookies fonctionnels</h3>
+          <ul>
+            <li><strong>lang</strong> — Langue sélectionnée</li>
+            <li><strong>settings</strong> — Préférences audio et visuelles</li>
+            <li><strong>highscore</strong> — Meilleur score enregistré</li>
+          </ul>
+          <h3>Cookies tiers</h3>
+          <p>Aucun cookie publicitaire ou de tracking tiers n'est utilisé.</p>
+          <h3>Gestion</h3>
+          <p>Vous pouvez désactiver les cookies dans les paramètres de votre navigateur, mais cela peut affecter le fonctionnement du jeu.</p>
+        </div>
+      </div>
+
+      <button id="legal-ok-btn" class="btn btn-navy" style="width:100%; justify-content:center; margin-top:20px;" onclick="closeModal('modal-legal')">
+        J'ai compris
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     MODAL — CRÉDITS
+     ============================================================ -->
+<div class="modal-overlay" id="modal-credits">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-credits-title">ℹ Crédits</h2>
+      <button class="modal-close-btn" onclick="closeModal('modal-credits')">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:70vh; overflow-y:auto;">
+      <div class="credits-header-img">🎬</div>
+      <div class="credits-title-main">Pixar Quest</div>
+      <div class="credits-version" id="credits-version">Version 1.0.0 — La Collection Cachée</div>
+
+      <div class="credits-section">
+        <div class="credits-label">Concept & Direction</div>
+        <div class="credits-person">
+          <div class="credits-avatar blue">Q</div>
+          <div>
+            <div class="credits-person-name">Quentin</div>
+            <div class="credits-person-role">Game Designer & Développeur principal</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">Design & Visuels</div>
+        <div class="credits-person">
+          <div class="credits-avatar yellow">3D</div>
+          <div>
+            <div class="credits-person-name">Scène 3D</div>
+            <div class="credits-person-role">Modélisation & animation — Blender</div>
+          </div>
+        </div>
+        <div class="credits-person">
+          <div class="credits-avatar red">UI</div>
+          <div>
+            <div class="credits-person-name">Interface utilisateur</div>
+            <div class="credits-person-role">Design inspiré de l'univers Pixar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">Technologies utilisées</div>
+        <div class="credits-tech">
+          <span class="credits-badge">HTML5</span>
+          <span class="credits-badge">CSS3</span>
+          <span class="credits-badge">JavaScript</span>
+          <span class="credits-badge">Blender 3D</span>
+          <span class="credits-badge">Fredoka One</span>
+          <span class="credits-badge">Nunito</span>
+        </div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">Remerciements</div>
+        <p style="font-size:13px; color:#666; line-height:1.7;">
+          Merci à toutes les personnes qui ont testé le jeu et fourni leurs retours.<br>
+          Ce projet est un hommage passionné à l'univers créatif de Pixar Animation Studios.
+        </p>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">Avertissement</div>
+        <p style="font-size:12px; color:#aaa; line-height:1.6;">
+          Pixar Quest est un projet indépendant non affilié à Pixar ou Disney. Les noms de films et personnages sont des marques déposées de leurs propriétaires respectifs.
+        </p>
+      </div>
+
+      <div style="text-align:center; margin-top:8px;">
+        <p style="font-size:11px; color:#ccc; letter-spacing:0.1em;">@PIXARTRIVIAAPP • 2025</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     MODAL — PARAMÈTRES
+     ============================================================ -->
+<div class="modal-overlay" id="modal-params">
+  <div class="params-card">
+    <h2 id="params-title">⚙ Paramètres</h2>
+    <div class="params-row">
+      <span id="param-music-label">Musique</span>
+      <button class="toggle on" id="toggle-music" onclick="toggleParam('music')"></button>
+    </div>
+    <div class="params-row">
+      <span id="param-sfx-label">Effets sonores</span>
+      <button class="toggle on" id="toggle-sfx" onclick="toggleParam('sfx')"></button>
+    </div>
+    <div class="params-row">
+      <span id="param-vibration-label">Vibrations</span>
+      <button class="toggle" id="toggle-vibration" onclick="toggleParam('vibration')"></button>
+    </div>
+    <div class="params-row">
+      <span id="param-dark-label">Mode sombre</span>
+      <button class="toggle" id="toggle-dark" onclick="toggleParam('dark')"></button>
+    </div>
+    <button id="params-close-btn" class="btn btn-navy params-close" onclick="closeParams()">Fermer</button>
+  </div>
+</div>
+
+
+<!-- script chargé en dernier pour que le DOM soit prêt -->
 <script src="script.js"></script>
 </body>
 </html>
