@@ -1,3 +1,28 @@
+/* ============================================================
+   PIXAR QUEST — style.css
+  
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --yellow: #F5C518;
+  --yellow-dark: #D4A800;
+  --navy: #1B2A6B;
+  --navy-light: #2D3E8F;
+  --red-dark: #8B1A1A;
+  --cream: #F0E8D5;
+  --white: #FFFFFF;
+  --font-title: 'Fredoka One', cursive;
+  --font-body: 'Nunito', sans-serif;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  font-family: var(--font-body);
+  overflow: hidden;
+  background: #1B2A6B;
+}
+
 /* ===================== SCREENS ===================== */
 .screen {
   position: absolute; inset: 0;
