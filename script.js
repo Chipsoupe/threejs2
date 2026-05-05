@@ -1,4 +1,10 @@
+/* ============================================================
+   PIXAR QUEST — script.js
+   ============================================================ */
 
+// =====================================================
+// TRANSLATIONS (FR / EN)
+// =====================================================
 const LANG = {
   fr: {
     /* Home */
@@ -167,7 +173,9 @@ const LANG = {
   }
 };
 
+// =====================================================
 // QUESTIONS DATA
+// =====================================================
 const QUESTIONS = [
   { obj: '🐟', answer: ['le monde de nemo', 'finding nemo', 'nemo'] },
   { obj: '🤠', answer: ['toy story'] },
@@ -197,7 +205,9 @@ const DIFFICULTIES = {
   hard:   { time: 15, pts: 30, questions: 20 },
 };
 
+// =====================================================
 // STATE
+// =====================================================
 let currentLang = 'fr';
 
 let state = {
@@ -212,7 +222,9 @@ let state = {
 
 const params = { music: true, sfx: true, vibration: false, dark: false };
 
+// =====================================================
 // HELPERS
+// =====================================================
 function t(key, ...args) {
   const val = LANG[currentLang][key];
   return typeof val === 'function' ? val(...args) : val;
@@ -226,8 +238,9 @@ function normalize(str) {
     .replace(/\s+/g, ' ');
 }
 
+// =====================================================
 // SCREEN NAVIGATION
-
+// =====================================================
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -235,9 +248,9 @@ function showScreen(id) {
 
 function showRules() { showScreen('screen-rules'); }
 
-
+// =====================================================
 // APPLY LANGUAGE — updates every text node in the UI
-
+// =====================================================
 function applyLanguage() {
   const L = LANG[currentLang];
 
@@ -307,9 +320,9 @@ function applyLanguage() {
   document.getElementById('params-close-btn').textContent               = L.paramClose;
 }
 
-
+// =====================================================
 // LANG MODAL
-
+// =====================================================
 function selectLang(lang) {
   currentLang = lang;
   document.querySelectorAll('.lang-option').forEach(el => el.classList.remove('selected'));
@@ -321,9 +334,9 @@ function applyLang() {
   closeModal('modal-lang');
 }
 
-
+// =====================================================
 // LEGAL TABS
-
+// =====================================================
 function switchLegalTab(tab, btn) {
   document.querySelectorAll('.legal-tab').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.legal-content').forEach(el => el.classList.remove('active'));
@@ -331,9 +344,9 @@ function switchLegalTab(tab, btn) {
   btn.classList.add('active');
 }
 
-
+// =====================================================
 // MODALS
-
+// =====================================================
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -358,9 +371,9 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLanguage();
 });
 
-
+// =====================================================
 // DIFFICULTY ICONS
-
+// =====================================================
 function buildDiffIcons() {
   const counts = { easy: 10, normal: 15, hard: 20 };
   ['easy', 'normal', 'hard'].forEach(d => {
@@ -376,9 +389,9 @@ function buildDiffIcons() {
   });
 }
 
-
+// =====================================================
 // LOADING
-
+// =====================================================
 function startLoading(diff) {
   state.difficulty = diff;
   showScreen('screen-loading');
@@ -407,9 +420,9 @@ function startLoading(diff) {
   }, 60);
 }
 
-
+// =====================================================
 // GAME
-
+// =====================================================
 function startGame() {
   const cfg = DIFFICULTIES[state.difficulty];
   state.questions = [...QUESTIONS].sort(() => Math.random() - 0.5).slice(0, cfg.questions);
@@ -526,9 +539,9 @@ function nextQuestion() {
   }
 }
 
-
+// =====================================================
 // RESULT
-
+// =====================================================
 function showResult() {
   document.getElementById('result-found').textContent = t('foundFilms', state.correct, state.questions.length);
   document.getElementById('result-score').textContent = state.score + ' PTS';
