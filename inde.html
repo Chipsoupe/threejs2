@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixar Quest – La Collection Cachée</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="screen active" id="screen-home">
+  <div class="home-content">
+    <div class="home-title-card">
+      <div class="red-dot"></div>
+      <h1>PIXAR QUEST</h1>
+      <div class="subtitle">La Collection Cachée</div>
+    </div>
+    <div class="home-buttons">
+      <button class="btn btn-yellow" onclick="showRules()">▶ COMMENCER</button>
+      <button class="btn btn-navy" onclick="openParams()">⚙ PARAMÈTRES</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-rules">
+  <div class="rules-panel">
+    <h2>📋 Règlement du jeu</h2>
+    <button onclick="showScreen('screen-home')">Retour</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-game">
+  <div class="game-header">
+    <div class="game-score-badge">⭐ <span id="score-display">0</span></div>
+  </div>
+
+  <div class="game-center">
+    <div class="object-display" id="object-display">🐟</div>
+    <input id="answer-input" type="text" placeholder="Nom du film">
+    <button onclick="validateAnswer()">VALIDER</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-result">
+  <div class="result-card">
+    <div id="result-score">0 PTS</div>
+    <button onclick="replay()">Rejouer</button>
+  </div>
+</div>
+
+<div id="modal-params">
+  <button onclick="closeParams()">Fermer</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
