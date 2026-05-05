@@ -136,5 +136,126 @@
     </div>
 </div>
 
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas.webgl {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui-chargement {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #002d5a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100; 
+        color: white;
+        font-family: sans-serif;
+    }
+
+    #ui-accueil {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+    }
+
+        <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  canvas.webgl {
+    display: block;
+    width: 100%;
+    height: 100%;
+     position: absolute; 
+    top: 0;
+    left: 0;
+    z-index: 1; 
+  }
+
+
+  #ui-accueil {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+  }
+
+  .carte-menu {
+    background-color: #d9c5b2;
+    padding: 40px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  
+</style>
+    </style>
+</head>
+<body>
+
+    <canvas class="webgl"></canvas>
+
+    <div id="ui-chargement">
+    <div class="chargement-contenu">
+        <div class="logo-animation">🎬</div>
+        <p>CHARGEMENT...</p>
+        <div class="barre-fond">
+            <div id="barre-remplissage"></div>
+        </div>
+    </div>
+</div>
+
+<div id="ui-accueil" style="display:none;">
+    </div>
+
+  <div id="ui-accueil">
+      <div class="carte-menu">
+          <h1>PIXAR QUEST</h1>
+          <p>La Collection Cachée</p>
+          <button id="btn-commencer" style="padding: 10px 20px; font-size: 18px; margin-top: 20px; cursor: pointer;">
+              ▶ COMMENCER
+          </button>
+      </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
 </body>
 </html>
