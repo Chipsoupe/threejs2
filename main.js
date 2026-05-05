@@ -412,7 +412,7 @@ const objetsPixar = {
     '/models/gateaux_rebelle.glb': ['rebelle', 'brave'],
     '/models/gemephoenix_enavant.glb': ['en avant', 'onward'],
     '/models/guitare_coco.glb': ['coco'],
-    '/models/lotso_toystory3.glb': ['toy story 3'],
+    '/models/lotso_toystory3.glb': ['toy story 3', 'toy story'],
     '/models/vespa_luca.glb': ['luca']
 };
 
@@ -510,6 +510,14 @@ loadModel({
     scale : { x: 1.8, y: 1.8, z: 1.8 },
     material : blackMaterial
 });
+
+loadModel({
+    path: '/models/lampe_pixar.glb',
+    position: { x: -4.3, y: 1.25, z: 1.2},
+    rotation: { x: 0, y: -Math.PI/2, z: 0 },
+    scale : { x: 0.5, y: 0.5, z: 0.5 },
+});
+
 
 loadModel({
     path: '/models/meubles/drawer.glb',
