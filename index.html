@@ -81,77 +81,17 @@
       </li>
     </ul>
 
-    <hr class="rules-divider">
-
-    <p id="pts-label" style="text-align:center; font-weight:800; color:var(--navy); font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;">
-      Points par difficulté
-    </p>
-    <div class="rules-scoring">
-      <div class="score-pill easy">
-        <div class="diff">Facile</div>
-        <div class="pts">+10</div>
-        <div class="label pts-per-answer">pts / réponse</div>
-        <div class="label" style="margin-top:4px; font-size:10px;">⏱ 45s</div>
-      </div>
-      <div class="score-pill normal">
-        <div class="diff">Normal</div>
-        <div class="pts">+20</div>
-        <div class="label pts-per-answer">pts / réponse</div>
-        <div class="label" style="margin-top:4px; font-size:10px;">⏱ 30s</div>
-      </div>
-      <div class="score-pill hard">
-        <div class="diff">Difficile</div>
-        <div class="pts">+30</div>
-        <div class="label pts-per-answer">pts / réponse</div>
-        <div class="label" style="margin-top:4px; font-size:10px;">⏱ 15s</div>
-      </div>
-    </div>
-
     <div style="display:flex; gap:12px;">
       <button id="btn-rules-back"  class="btn btn-navy"   style="flex:1; justify-content:center;" onclick="showScreen('screen-home')">← Retour</button>
-      <button id="btn-choose-diff" class="btn btn-yellow" style="flex:1; justify-content:center;" onclick="showScreen('screen-difficulty')">Choisir la difficulté →</button>
+      <button id="btn-choose-diff" class="btn btn-yellow" style="flex:1; justify-content:center;" onclick="startLoading('normal')">Commencer le jeu </button>
     </div>
   </div>
 </div>
 
 
-<!-- ============================================================
-     3. DIFFICULTY SCREEN
-     ============================================================ -->
-<div class="screen" id="screen-difficulty">
-  <div style="display:flex; flex-direction:column; align-items:center;">
-    <div class="diff-header">
-      <div class="diff-header-card">
-        <h2>Pixar Quest</h2>
-      </div>
-      <p id="select-challenge">Select Your Challenge</p>
-    </div>
 
-    <div class="diff-cards">
-      <!-- EASY -->
-      <div class="diff-card easy" onclick="startLoading('easy')">
-        <h3>FACILE</h3>
-        <div class="diff-film-icons" id="icons-easy"></div>
-        <div class="diff-timer"><span class="timer-icon">⏱</span> 45s</div>
-        <button id="btn-choose-easy" class="btn btn-navy" style="width:100%; justify-content:center;">Choose Facile</button>
-      </div>
-      <!-- NORMAL -->
-      <div class="diff-card normal" onclick="startLoading('normal')">
-        <h3>NORMAL</h3>
-        <div class="diff-film-icons" id="icons-normal"></div>
-        <div class="diff-timer"><span class="timer-icon">⏱</span> 30s</div>
-        <button id="btn-choose-normal" class="btn btn-navy" style="width:100%; justify-content:center;">Choose Normal</button>
-      </div>
-      <!-- HARD -->
-      <div class="diff-card hard" onclick="startLoading('hard')">
-        <h3>DIFFICILE</h3>
-        <div class="diff-film-icons" id="icons-hard"></div>
-        <div class="diff-timer"><span class="timer-icon" style="color:var(--red-dark)">⏱</span> 15s</div>
-        <button id="btn-choose-hard" class="btn btn-red" style="width:100%; justify-content:center;">Choose Difficile</button>
-      </div>
-    </div>
-  </div>
-</div>
+    
+     
 
 
 <!-- ============================================================
@@ -169,32 +109,8 @@
 </div>
 
 
-<!-- ============================================================
-     5. GAME SCREEN
-     ============================================================ -->
-<div class="screen" id="screen-game">
-  <div class="game-header">
-    <div class="game-score-badge">⭐ <span id="score-display">0</span> pts</div>
-    <div class="game-progress" id="game-progress"></div>
-    <div class="game-timer" id="game-timer">⏱ <span id="timer-display">30</span>s</div>
-  </div>
 
-  <div class="game-center">
-    <div class="pts-badge">✦ +<span id="pts-per-q">20</span> pts</div>
-    <div class="object-display" id="object-display">🐟</div>
-    <div class="question-text">À quel film appartient cet objet ?</div>
-    <input
-      class="answer-input"
-      id="answer-input"
-      type="text"
-      placeholder="🎬 Nom du film..."
-      onkeydown="if(event.key==='Enter') validateAnswer()"
-    >
-    <button class="validate-btn" onclick="validateAnswer()">VALIDER ✔</button>
-    <div class="feedback-msg" id="feedback-msg"></div>
-  </div>
-</div>
-
+ 
 
 <!-- ============================================================
      6. RESULT SCREEN
@@ -354,7 +270,7 @@
         <div class="credits-person">
           <div class="credits-avatar blue">Q</div>
           <div>
-            <div class="credits-person-name">Quentin</div>
+            <div class="credits-person-name">MINA</div>
             <div class="credits-person-role">Game Designer & Développeur principal</div>
           </div>
         </div>

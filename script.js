@@ -29,14 +29,9 @@ const LANG = {
     ptsLabel:        'Points par difficulté',
     ptsPerAnswer:    'pts / réponse',
     btnBack:         '← Retour',
-    btnChooseDiff:   'Choisir la difficulté →',
+    btnChooseDiff:   'commencer le jeu  →',
 
-    /* Difficulty */
-    selectChallenge: 'Select Your Challenge',
-    chooseFacile:    'Choose Facile',
-    chooseNormal:    'Choose Normal',
-    chooseDifficile: 'Choose Difficile',
-
+    
     /* Loading */
     loadingMsgs: [
       'Entrons dans la Toybox...',
@@ -46,14 +41,7 @@ const LANG = {
       'Presque prêt...'
     ],
 
-    /* Game */
-    ptsUnit:         'pts',
-    question:        'À quel film appartient cet objet ?',
-    placeholder:     '🎬 Nom du film...',
-    validate:        'VALIDER ✔',
-    bravo:           '✓ Bravo ! +',
-    timeout:         '⏱ Temps écoulé ! C\'était : ',
-    wrong:           '✗ Raté ! C\'était : ',
+   
 
     /* Result */
     foundFilms:      (c, t) => `J'ai trouvé ${c}/${t} films !`,
@@ -112,14 +100,9 @@ const LANG = {
     ptsLabel:        'Points per difficulty',
     ptsPerAnswer:    'pts / answer',
     btnBack:         '← Back',
-    btnChooseDiff:   'Choose difficulty →',
+    btnChooseDiff:   'start game  →',
 
-    /* Difficulty */
-    selectChallenge: 'Select Your Challenge',
-    chooseFacile:    'Choose Easy',
-    chooseNormal:    'Choose Normal',
-    chooseDifficile: 'Choose Hard',
-
+    
     /* Loading */
     loadingMsgs: [
       'Entering the Toybox...',
@@ -129,14 +112,6 @@ const LANG = {
       'Almost ready...'
     ],
 
-    /* Game */
-    ptsUnit:         'pts',
-    question:        'Which film does this object belong to?',
-    placeholder:     '🎬 Movie name...',
-    validate:        'VALIDATE ✔',
-    bravo:           '✓ Great! +',
-    timeout:         '⏱ Time\'s up! It was: ',
-    wrong:           '✗ Wrong! It was: ',
 
     /* Result */
     foundFilms:      (c, t) => `I found ${c}/${t} films!`,
@@ -173,37 +148,7 @@ const LANG = {
   }
 };
 
-// =====================================================
-// QUESTIONS DATA
-// =====================================================
-const QUESTIONS = [
-  { obj: '🐟', answer: ['le monde de nemo', 'finding nemo', 'nemo'] },
-  { obj: '🤠', answer: ['toy story'] },
-  { obj: '🏎',  answer: ['cars', 'cars 1'] },
-  { obj: '🐀', answer: ['ratatouille'] },
-  { obj: '🤖', answer: ['wall-e', 'wall e', 'walle'] },
-  { obj: '🐛', answer: ["1001 pattes", "a bug's life", "bug's life"] },
-  { obj: '👾', answer: ['monstres et cie', 'monstres & cie', 'monsters inc', 'monsters, inc'] },
-  { obj: '⬆',  answer: ['la haut', 'up'] },
-  { obj: '🎸', answer: ['coco'] },
-  { obj: '💡', answer: ['vice-versa', 'vice versa', 'inside out'] },
-  { obj: '🐻', answer: ['rebrave', 'brave', 'rebelle'] },
-  { obj: '🌊', answer: ['le monde de dory', 'finding dory', 'dory'] },
-  { obj: '🦸', answer: ['les indestructibles', 'the incredibles', 'incredibles'] },
-  { obj: '🧊', answer: ['soul'] },
-  { obj: '🦎', answer: ['luca'] },
-  { obj: '🐉', answer: ['turning red', 'alerte rouge'] },
-  { obj: '🎪', answer: ['en avant', 'onward'] },
-  { obj: '🌌', answer: ['lightyear'] },
-  { obj: '🪄', answer: ['elemental'] },
-  { obj: '🔴', answer: ['inside out 2', 'vice-versa 2', 'vice versa 2'] },
-];
 
-const DIFFICULTIES = {
-  easy:   { time: 45, pts: 10, questions: 10 },
-  normal: { time: 30, pts: 20, questions: 15 },
-  hard:   { time: 15, pts: 30, questions: 20 },
-};
 
 // =====================================================
 // STATE
@@ -278,16 +223,7 @@ function applyLanguage() {
   document.getElementById('btn-rules-back').textContent                 = L.btnBack;
   document.getElementById('btn-choose-diff').textContent                = L.btnChooseDiff;
 
-  /* ---- Difficulty ---- */
-  document.getElementById('select-challenge').textContent               = L.selectChallenge;
-  document.getElementById('btn-choose-easy').textContent                = L.chooseFacile;
-  document.getElementById('btn-choose-normal').textContent              = L.chooseNormal;
-  document.getElementById('btn-choose-hard').textContent                = L.chooseDifficile;
-
-  /* ---- Game ---- */
-  document.getElementById('answer-input').placeholder                   = L.placeholder;
-  document.querySelector('.question-text').textContent                  = L.question;
-  document.querySelector('.validate-btn').textContent                   = L.validate;
+  
 
   /* ---- Result ---- */
   document.getElementById('result-share-btn').textContent               = L.share;
