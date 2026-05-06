@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Première scène Three.js</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -19,10 +22,122 @@
             width: 100%;
             height: 100%;
         }
+
+        /*AJOUT THIKANA*/
+#pixar-modal {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; 
+    font-family: 'Lilita One', cursive;
+}
+
+.modal-contenu {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    border: 6px solid #005696; 
+    text-align: center;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+}
+
+#champ-reponse {
+    width: 80%;
+    padding: 10px;
+    margin: 15px 0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#bouton-valider {
+    background-color: #fca000; 
+    font-family: lilita one;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#fermer-modal {
+    position: absolute;
+    top: 10px; right: 15px;
+    background: none; border: none;
+    font-size: 20px; cursor: pointer; color: #888;
+}
+
+.cache {
+    display: none !important; 
+}
+
+.texte-resume {
+    font-size: 14px;
+    color: #333;
+    text-align: justify;
+    font-size : 14px;
+    font-weight: light;
+}
+#message-erreur { 
+    color: red; font-weight: bold; 
+    margin-top: 15px;}
+
+        /*FIN AJOUT*/
+
+#titre-api {
+    color: #005696;
+    margin: 15px;
+}
+
+#note-api {
+    color: #fca000;
+    font-size: 18px;
+    margin-bottom : 15px;
+}
+
+#titre-note-api {
+    margin-bottom:15px;
+}
+
+
     </style>
 </head>
 <body>
     <canvas class="webgl"></canvas>
+
+    //AJOUT THIKANA
+<div id="pixar-modal" class="cache">
+    <div class="modal-contenu">
+        <!-- Bouton pour fermer -->
+        <button id="fermer-modal">✖</button>
+        
+      
+        <div id="zone-question">
+            <h2>Quel est ce film Pixar ?</h2>
+            <input type="text" id="champ-reponse" placeholder="Tape le nom du film ici...">
+            <button id="bouton-valider">Valider</button>
+            <p id="message-erreur" class="cache">Mauvaise réponse, essaie encore !</p>
+        </div>
+
+       
+        <div id="zone-resultat" class="cache">
+            <h2>BRAVO !</h2>
+            <h3 id="titre-api">Titre du film</h3>
+            <p id="titre-note-api">Note : <strong id="note-api"></strong>/10</p>
+            <img id="affiche-film" src="" alt="Affiche du film" style="width: 150px; border-radius: 8px; margin-bottom: 10px;">
+            <p id="resume-api" class="texte-resume"></p>
+        </div>
+    </div>
+</div>
+//FIN AJOUT
 
     <script type="module" src="/main.js"></script>
 </body>
