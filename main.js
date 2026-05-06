@@ -18,6 +18,9 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
 // Create a renderer
 const renderer = new THREE.WebGLRenderer({ canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -309,6 +312,7 @@ createRoomLight({ x: -4.5, y: 2.9, z: -4.5, color: 0xfff3c4, intensity: 1.1, dis
 createRoomLight({ x: 4.5, y: 2.9, z: -4.5, color: 0xfff3c4, intensity: 1.1, distance: 5 });
 createRoomLight({ x: -4.5, y: 2.9, z: 4.5, color: 0xfff3c4, intensity: 1.1, distance: 5 });
 createRoomLight({ x: 4.5, y: 2.9, z: 4.5, color: 0xfff3c4, intensity: 1.1, distance: 5 });
+createRoomLight({x: -4.09, y: 1.48, z: 1.39, color: 0xfff3c4, intensity: 1.1, distance: 5 });
 
 
 const loader = new GLTFLoader();
@@ -316,6 +320,10 @@ const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/gltf/');
 loader.setDRACOLoader(dracoLoader);
 const models = [];
+window.__threeDebug = { scene, camera, models, raycaster, pointer };
+
+
+
 
 
 
@@ -386,19 +394,30 @@ const objetsPixar = {
 //API
 const API_KEY = '1a68d10a3ade0c16fbd9de20d20e87fa';
 
-// Raycaster and pointer for click detection
-const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
+//AJOUT THIKANA
 
-canvas.addEventListener('click', async (event) => {
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+const modal = document.getElementById("pixar-modal");
+const boutonFermer = document.getElementById("fermer-modal");
+const boutonValider = document.getElementById("bouton-valider");
+const champReponse = document.getElementById("champ-reponse");
+const messageErreur = document.getElementById("message-erreur");
+const zoneQuestion = document.getElementById("zone-question");
+const zoneResultat = document.getElementById("zone-resultat");
+
+
+let objetActuelClique = null;
+let cheminObjetActuel = "";
+
+
+canvas.addEventListener('click', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
     
     const intersects = raycaster.intersectObjects(models, true);
     
     if (intersects.length > 0) {
-        
         let clickedModel = intersects[0].object;
         while (clickedModel.parent && !clickedModel.userData.path) {
             clickedModel = clickedModel.parent;
@@ -406,44 +425,68 @@ canvas.addEventListener('click', async (event) => {
 
         const modelPath = clickedModel.userData.path;
 
-        
         if (modelPath && objetsPixar[modelPath]) {
-            // Fait apparaître une boîte de dialogue pour taper le nom
-            const reponseJoueur = window.prompt("De quel film Pixar provient cet objet ?");
+            objetActuelClique = clickedModel;
+            cheminObjetActuel = modelPath;
             
-            if (reponseJoueur) {
-                
-                const reponsePropre = reponseJoueur.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                const reponsesAcceptees = objetsPixar[modelPath].map(r => r.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
-                
-                
-                if (reponsesAcceptees.includes(reponsePropre)) {
-                    
-                    
-                    try {
-                        const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(reponsesAcceptees[0])}&language=fr-FR`);
-                        const data = await res.json();
-                        
-                        if (data.results && data.results.length > 0) {
-                            const film = data.results[0];
-                            // Affiche les infos du film à l'écran
-                            alert(`🎉 BRAVO !\n\n🎬 TITRE : ${film.title}\n⭐ NOTE : ${film.vote_average}/10\n📖 RÉSUMÉ : ${film.overview}`);
-                            
-
-                            
-                        } else {
-                            alert("Bravo ! (Les infos du film sont introuvables)");
-                        }
-                    } catch (erreur) {
-                        console.error("Erreur API :", erreur);
-                    }
-                } else {
-                    alert("❌ Mauvaise réponse... Essaie encore !");
-                }
-            }
+            
+            champReponse.value = "";
+            messageErreur.classList.add("cache");
+            zoneQuestion.classList.remove("cache");
+            zoneResultat.classList.add("cache");
+            
+            modal.classList.remove("cache");
         }
     }
 });
+
+
+boutonValider.addEventListener("click", async () => {
+    const reponseJoueur = champReponse.value;
+    
+    if (reponseJoueur) {
+        const reponsePropre = reponseJoueur.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const reponsesAcceptees = objetsPixar[cheminObjetActuel].map(r => r.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+        
+        if (reponsesAcceptees.includes(reponsePropre)) {
+            messageErreur.classList.add("cache");
+            
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(reponsesAcceptees[0])}&language=fr-FR`);
+                const data = await res.json();
+                
+                if (data.results && data.results.length > 0) {
+                    const film = data.results[0];
+                    
+                    document.getElementById("titre-api").innerText = film.title;
+                    document.getElementById("note-api").innerText = film.vote_average.toFixed(1); // Arrondi à 1 chiffre
+                    document.getElementById("resume-api").innerText = film.overview;
+                    
+                    const imageURL = "https://image.tmdb.org/t/p/w500" + film.poster_path;
+                        document.getElementById("affiche-film").src = imageURL;
+
+                    zoneQuestion.classList.add("cache");
+                    zoneResultat.classList.remove("cache");
+                    
+                }
+            } catch (erreur) {  
+                console.error("Erreur API :", erreur);
+            }
+        } else {
+            messageErreur.classList.remove("cache");
+        }
+    }
+});
+
+
+boutonFermer.addEventListener("click", () => {
+    modal.classList.add("cache");
+    
+});
+
+//fin ajout
+    
+
 
 //load les meubles
 loadModel({
@@ -585,6 +628,14 @@ loadModel({
 
 //load les objets
 loadModel({
+    path: '/models/lampe_pixar.glb',
+    position: { x: -4.2, y: 1.3, z: 1.3},
+    rotation: { x:0, y: -Math.PI/1.5, z: 0 },
+    scale: { x: 0.6, y: 0.6, z: 0.6 }
+});
+
+
+loadModel({
     path: '/models/piston_cup.glb',
     position: { x: -4.4, y: 1.3, z: 0},
     rotation: { x: 0, y: Math.PI, z: 0 },
@@ -716,7 +767,7 @@ loadModel({
 });
 
 
-const testModel = models[0]; // Remplacer par le modèle quon veut
+
 
 //mise en place des stickers sur les murs
 const imageNemoTexture = textureLoader.load('/textures/sticker_nemo2.jpg');
